@@ -12,12 +12,12 @@ const Header = () => {
                 매출 걱정 없이
               </div>
               <div className="text-3xl md:text-5xl text-brand-500">
-                솔직한 피드백 받고, 데이터로 매출 늘리세요
+                솔직한 피드백 받고, <br />데이터로 매출 늘리세요
               </div>
             </h1>
             <p className="text-lg md:text-xl mb-8 opacity-90 animate-slide-up">
               <span className="text-2xl md:text-2xl font-bold text-gray-800">
-                선주문 확정 매출 + <span className="text-red-500">비공개</span>{" "}
+                선주문 확정 매출 + <br /><span className="text-red-500">비공개</span>{" "}
                 안전 피드백으로
               </span>
               <br />

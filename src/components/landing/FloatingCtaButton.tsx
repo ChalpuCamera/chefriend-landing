@@ -35,14 +35,14 @@ export default function FloatingCtaButton() {
 
   return (
     <>
-      <div className="fixed top-5 left-1/2 transform -translate-x-1/2 z-50">
+      <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white px-8 py-4 text-lg font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 rounded-full"
+          className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white px-8 py-4 text-lg font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 rounded-full whitespace-nowrap ring-2 ring-white/20"
           aria-label="chefriend 무료 체험 신청"
         >
-          <span>무료로 시작하기</span>
-          <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <span className="whitespace-nowrap">무료로 시작하기</span>
+          <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
         </button>
       </div>
 

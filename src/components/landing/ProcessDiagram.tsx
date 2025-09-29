@@ -6,14 +6,14 @@ const ProcessDiagram = () => {
       icon: Store,
       title: "1. 메뉴 등록",
       description: ["사장님이 피드백 받고 싶은", "메뉴를 등록해요"],
-      bgColor: "from-brand-500 to-brand-600",
+      bgColor: "from-brand-200 to-brand-300",
     },
     {
       icon: CreditCard,
       title: "2. 평가단 주문",
       description: ["사장님 비용 부담", "절대 없어요"],
       highlight: { text: "절대 없어요", index: 1 },
-      bgColor: "from-brand-500 to-brand-600",
+      bgColor: "from-brand-200 to-brand-300",
     },
     {
       icon: MessageSquare,

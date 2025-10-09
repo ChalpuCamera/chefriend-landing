@@ -16,7 +16,8 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
   const handleCopyUrl = async () => {
     try {
       // URL 디코딩하여 한글을 읽기 쉽게 변환
-      const decodedUrl = decodeURIComponent(window.location.href);
+      const decodedUrl = decodeURIComponent(window.location.href)
+        .replace(/^https?:\/\/(www\.)?/, '');
       await navigator.clipboard.writeText(decodedUrl);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
@@ -34,6 +35,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             src={storeData.thumbnailUrl || "/kimchi.png"}
             alt={storeData.storeName}
             fill
+            quality={90}
             className="object-cover"
             priority
           />
@@ -81,8 +83,9 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 <Image
                   src="/instagram.png"
                   alt="Instagram"
-                  width={48}
-                  height={48}
+                  width={144}
+                  height={144}
+                  quality={90}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -98,31 +101,25 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {/* Map Links Section */}
       <div className="px-6 mb-6">
         <h3 className="text-sub-title-b text-gray-900 mb-3">지도</h3>
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3">
           {/* Naver Map Link */}
           <a
             href={storeData.naverMapLink || "https://map.naver.com"}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+            className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl overflow-hidden relative">
-                  <Image
-                    src="/naver.png"
-                    alt="Naver Map"
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">네이버 지도</span>
-              </div>
-              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+            <div className="w-12 h-12 rounded-xl overflow-hidden relative mb-2">
+              <Image
+                src="/naver.png"
+                alt="Naver Map"
+                width={144}
+                height={144}
+                quality={90}
+                className="w-full h-full object-cover"
+              />
             </div>
+            <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">네이버 지도</span>
           </a>
 
           {/* Kakao Map Link */}
@@ -130,25 +127,19 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             href={storeData.kakaoMapLink || "https://map.kakao.com"}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+            className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl overflow-hidden relative">
-                  <Image
-                    src="/kakaomap.png"
-                    alt="Kakao Map"
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">카카오맵</span>
-              </div>
-              <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-900 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+            <div className="w-12 h-12 rounded-xl overflow-hidden relative mb-2">
+              <Image
+                src="/kakaomap.png"
+                alt="Kakao Map"
+                width={144}
+                height={144}
+                quality={90}
+                className="w-full h-full object-cover"
+              />
             </div>
+            <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">카카오맵</span>
           </a>
         </div>
       </div>
@@ -168,12 +159,13 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             rel="noopener noreferrer"
             className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
           >
-            <div className="w-[74px] h-[74px] border border-gray-300 rounded-xl overflow-hidden mb-2">
+            <div className="w-[74px] overflow-hidden mb-2">
               <Image
                 src="/yogiyo.png"
                 alt="요기요"
-                width={74}
-                height={74}
+                width={200}
+                height={200}
+                quality={90}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -187,12 +179,13 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             rel="noopener noreferrer"
             className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
           >
-            <div className="w-[74px] h-[74px] border border-gray-300 rounded-xl overflow-hidden mb-2">
+            <div className="w-[74px] overflow-hidden mb-2">
               <Image
                 src="/baemin.png"
                 alt="배달의민족"
-                width={74}
-                height={74}
+                width={200}
+                height={200}
+                quality={90}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -206,12 +199,13 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             rel="noopener noreferrer"
             className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
           >
-            <div className="w-[74px] h-[74px] border border-gray-300 rounded-xl overflow-hidden mb-2">
+            <div className="w-[74px] overflow-hidden mb-2">
               <Image
                 src="/coupangeats.png"
                 alt="쿠팡이츠"
-                width={74}
-                height={74}
+                width={200}
+                height={200}
+                quality={90}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -228,28 +222,51 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {foodsData.map((food) => (
               <div
                 key={food.foodItemId}
-                className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                className={`flex items-center gap-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors ${
+                  food.thumbnailUrl ? 'p-4' : 'p-3'
+                }`}
               >
-                <Image
-                  src={food.thumbnailUrl || "/kimchi.png"}
-                  alt={food.foodName}
-                  width={98}
-                  height={98}
-                  className="rounded-lg object-cover w-24 h-24"
-                />
-                <div className="flex-1">
-                  <h3 className="text-headline-b text-gray-900">
-                    {food.foodName}
-                  </h3>
-                  {food.description && (
-                    <p className="text-sub-body-r text-gray-600 mt-1">
-                      {food.description}
-                    </p>
-                  )}
-                  <p className="text-body-sb text-chefriend mt-2">
-                    {food.price.toLocaleString()}원
-                  </p>
-                </div>
+                {food.thumbnailUrl ? (
+                  <>
+                    <Image
+                      src={food.thumbnailUrl}
+                      alt={food.foodName}
+                      width={256}
+                      height={256}
+                      quality={90}
+                      className="rounded-lg object-cover w-24 h-24"
+                    />
+                    <div className="flex-1">
+                      <h3 className="text-headline-b text-gray-900">
+                        {food.foodName}
+                      </h3>
+                      {food.description && (
+                        <p className="text-sub-body-r text-gray-600 mt-1">
+                          {food.description}
+                        </p>
+                      )}
+                      <p className="text-body-sb text-chefriend mt-2">
+                        {food.price.toLocaleString()}원
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-headline-b text-gray-900">
+                        {food.foodName}
+                      </h3>
+                      <p className="text-body-sb text-chefriend">
+                        {food.price.toLocaleString()}원
+                      </p>
+                    </div>
+                    {food.description && (
+                      <p className="text-sub-body-r text-gray-600 mt-1">
+                        {food.description}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>

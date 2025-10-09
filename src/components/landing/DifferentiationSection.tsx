@@ -42,7 +42,7 @@ const DifferentiationSection = () => {
         </div>
         <div className="max-w-5xl mx-auto mb-12 flex justify-center">
         <Image
-          src="/image.png"
+          src="/app_screen.png"
           alt="chefriend 앱 화면"
           width={1500}
           height={1252}

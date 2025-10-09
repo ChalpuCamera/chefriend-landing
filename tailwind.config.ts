@@ -29,6 +29,65 @@ export default {
           "sans-serif",
         ],
       },
+      fontSize: {
+        // Custom typography system
+        "large-title-1": [
+          "36px",
+          { lineHeight: "43px", letterSpacing: "-0.01em", fontWeight: "700" },
+        ],
+        "large-title-2": [
+          "32px",
+          { lineHeight: "39px", letterSpacing: "-0.01em", fontWeight: "700" },
+        ],
+        "title-1": [
+          "28px",
+          { lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "700" },
+        ],
+        "title-2": [
+          "24px",
+          { lineHeight: "31px", letterSpacing: "-0.01em", fontWeight: "700" },
+        ],
+        "sub-title-b": [
+          "20px",
+          { lineHeight: "26px", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+        "sub-title-m": [
+          "20px",
+          { lineHeight: "26px", letterSpacing: "-0.02em", fontWeight: "500" },
+        ],
+        "headline-b": [
+          "18px",
+          { lineHeight: "24px", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+        "headline-m": [
+          "18px",
+          { lineHeight: "24px", letterSpacing: "-0.02em", fontWeight: "500" },
+        ],
+        "body-sb": [
+          "16px",
+          { lineHeight: "24px", letterSpacing: "-0.02em", fontWeight: "600" },
+        ],
+        "body-r": [
+          "16px",
+          { lineHeight: "24px", letterSpacing: "-0.02em", fontWeight: "400" },
+        ],
+        "sub-body-sb": [
+          "14px",
+          { lineHeight: "21px", letterSpacing: "-0.02em", fontWeight: "600" },
+        ],
+        "sub-body-r": [
+          "14px",
+          { lineHeight: "21px", letterSpacing: "-0.02em", fontWeight: "400" },
+        ],
+        "caption-b": [
+          "12px",
+          { lineHeight: "18px", letterSpacing: "-0.02em", fontWeight: "700" },
+        ],
+        "caption-r": [
+          "12px",
+          { lineHeight: "18px", letterSpacing: "-0.02em", fontWeight: "400" },
+        ],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -17,9 +17,6 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // 빌드 성능 최적화
-  outputFileTracing: true,
-
   // 이미지 최적화
   images: {
     remotePatterns: [

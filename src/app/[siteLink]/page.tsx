@@ -1,20 +1,26 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { StoreClient } from "./store-client";
-import { fetchStoreIdByName, fetchStore, fetchFoodsByStore } from "@/lib/api/store";
+import {
+  fetchStoreIdBySiteLink,
+  fetchStore,
+  fetchFoodsByStore,
+} from "@/lib/api/store";
 import type { FoodItemResponse } from "@/lib/types/store";
 
 interface StorePageProps {
-  params: Promise<{ storename: string }>;
+  params: Promise<{ siteLink: string }>;
 }
 
-export async function generateMetadata({ params }: StorePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: StorePageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const storename = decodeURIComponent(resolvedParams.storename).replace(/-/g, ' ');
+  const siteLink = decodeURIComponent(resolvedParams.siteLink);
 
   try {
-    // 가게 이름으로 storeId 조회
-    const storeIdResponse = await fetchStoreIdByName(storename);
+    // 사이트 링크로 storeId 조회
+    const storeIdResponse = await fetchStoreIdBySiteLink(siteLink);
     const storeId = storeIdResponse?.result?.storeId;
 
     if (!storeId) {
@@ -30,10 +36,12 @@ export async function generateMetadata({ params }: StorePageProps): Promise<Meta
     if (store) {
       return {
         title: `${store.storeName} - 셰프렌드`,
-        description: store.description || `${store.storeName}의 메뉴를 확인하세요.`,
+        description:
+          store.description || `${store.storeName}의 메뉴를 확인하세요.`,
         openGraph: {
           title: `${store.storeName} - 셰프렌드`,
-          description: store.description || `${store.storeName}의 메뉴를 확인하세요.`,
+          description:
+            store.description || `${store.storeName}의 메뉴를 확인하세요.`,
         },
       };
     }
@@ -42,18 +50,18 @@ export async function generateMetadata({ params }: StorePageProps): Promise<Meta
   }
 
   return {
-    title: `${storename} - 셰프렌드`,
+    title: `${siteLink} - 셰프렌드`,
     description: "맛있는 메뉴를 확인하세요.",
   };
 }
 
 export default async function StorePage({ params }: StorePageProps) {
   const resolvedParams = await params;
-  const storename = decodeURIComponent(resolvedParams.storename).replace(/-/g, ' ');
+  const siteLink = decodeURIComponent(resolvedParams.siteLink);
 
   try {
-    // 1. 가게 이름으로 storeId 조회
-    const storeIdResponse = await fetchStoreIdByName(storename);
+    // 1. 사이트 링크로 storeId 조회
+    const storeIdResponse = await fetchStoreIdBySiteLink(siteLink);
     const storeId = storeIdResponse?.result?.storeId;
 
     if (!storeId) {
@@ -68,13 +76,17 @@ export default async function StorePage({ params }: StorePageProps) {
     try {
       const storeResponse = await fetchStore(storeId);
       storeData = storeResponse?.result;
+      console.log(storeData);
     } catch {
       // Silently handle store fetch errors
     }
 
     // Foods 정보 fetch
     try {
-      const foodsResponse = await fetchFoodsByStore(storeId, { page: 0, size: 20 });
+      const foodsResponse = await fetchFoodsByStore(storeId, {
+        page: 0,
+        size: 20,
+      });
       foodsData = foodsResponse?.result?.content || [];
     } catch {
       // Silently handle foods fetch errors
@@ -84,18 +96,30 @@ export default async function StorePage({ params }: StorePageProps) {
     if (!storeData) {
       storeData = {
         storeId: storeId,
-        storeName: storename,
-        description: "",
+        storeName: "",
         address: "",
-        instagramLink: "https://instagram.com",
-        naverMapLink: "https://map.naver.com",
-        kakaoMapLink: "https://map.kakao.com",
+        baeminLink: undefined,
+        yogiyoLink: undefined,
+        coupangEatsLink: undefined,
+        naverLink: undefined,
+        kakaoLink: undefined,
+        instagramLink: undefined,
+        kakaoTalkLink: undefined,
+        siteLink: siteLink,
+        description: undefined,
+        thumbnailUrl: undefined,
       };
     }
 
-    return <StoreClient storeId={storeId} storeData={storeData} foodsData={foodsData} />;
+    return (
+      <StoreClient
+        storeId={storeId}
+        storeData={storeData}
+        foodsData={foodsData}
+      />
+    );
   } catch (error) {
-    console.error(`[StorePage] Error for storename ${storename}:`, error);
+    console.error(`[StorePage] Error for siteLink ${siteLink}:`, error);
     notFound();
   }
 }

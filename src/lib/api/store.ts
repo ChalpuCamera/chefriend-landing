@@ -83,11 +83,11 @@ async function serverFetch<T>(
   }
 }
 
-// 가게 이름으로 storeId 조회 (새로 추가)
-export async function fetchStoreIdByName(
-  storename: string
+// 사이트 링크로 storeId 조회
+export async function fetchStoreIdBySiteLink(
+  siteLink: string
 ): Promise<ApiResponse<StoreIdResponse>> {
-  return serverFetch(`/api/public/stores/${encodeURIComponent(storename)}`);
+  return serverFetch(`/api/public/stores/${encodeURIComponent(siteLink)}`);
 }
 
 // Store APIs

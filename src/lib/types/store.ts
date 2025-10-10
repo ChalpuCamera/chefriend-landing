@@ -29,11 +29,13 @@ export interface StoreResponse {
   baeminLink?: string;
   yogiyoLink?: string;
   coupangEatsLink?: string;
+  naverLink?: string;
+  kakaoLink?: string;
+  instagramLink?: string;
+  kakaoTalkLink?: string;
+  siteLink: string;
   description?: string;
   thumbnailUrl?: string;
-  instagramLink: string;
-  naverMapLink: string;
-  kakaoMapLink: string;
 }
 
 // 음식 정보

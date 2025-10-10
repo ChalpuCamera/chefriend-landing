@@ -13,6 +13,15 @@ interface StoreClientProps {
 export function StoreClient({ storeData, foodsData }: StoreClientProps) {
   const [copySuccess, setCopySuccess] = useState(false);
 
+  // URL에 https://가 없으면 추가하는 함수
+  const ensureHttps = (url: string | null | undefined): string | undefined => {
+    if (!url) return undefined;
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   const handleCopyUrl = async () => {
     try {
       // URL 디코딩하여 한글을 읽기 쉽게 변환
@@ -79,7 +88,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
           <div className="grid grid-cols-1 gap-3">
             {storeData.instagramLink && (
               <a
-                href={storeData.instagramLink}
+                href={ensureHttps(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
@@ -105,7 +114,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             )}
             {storeData.kakaoTalkLink && (
               <a
-                href={storeData.kakaoTalkLink}
+                href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
@@ -141,7 +150,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* Naver Map Link */}
             {storeData.naverLink && (
               <a
-                href={storeData.naverLink}
+                href={ensureHttps(storeData.naverLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
@@ -165,7 +174,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* Kakao Map Link */}
             {storeData.kakaoLink && (
               <a
-                href={storeData.kakaoLink}
+                href={ensureHttps(storeData.kakaoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
@@ -203,7 +212,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* 배달의민족 */}
             {storeData.baeminLink && (
               <a
-                href={storeData.baeminLink}
+                href={ensureHttps(storeData.baeminLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -225,7 +234,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* 쿠팡이츠 */}
             {storeData.coupangEatsLink && (
               <a
-                href={storeData.coupangEatsLink}
+                href={ensureHttps(storeData.coupangEatsLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -247,7 +256,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* 요기요 */}
             {storeData.yogiyoLink && (
               <a
-                href={storeData.yogiyoLink}
+                href={ensureHttps(storeData.yogiyoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"

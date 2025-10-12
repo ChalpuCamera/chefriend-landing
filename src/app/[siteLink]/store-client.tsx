@@ -47,10 +47,38 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
   // URL에 https://가 없으면 추가하는 함수
   const ensureHttps = (url: string | null | undefined): string | undefined => {
     if (!url) return undefined;
-    if (url.startsWith("http://") || url.startsWith("https://")) {
-      return url;
+
+    // 앞뒤 공백 제거
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return undefined;
+
+    // 이미 http:// 또는 https://로 시작하는 경우 (대소문자 무관)
+    if (/^https?:\/\//i.test(trimmedUrl)) {
+      return trimmedUrl;
     }
-    return `https://${url}`;
+
+    // https:// 추가
+    return `https://${trimmedUrl}`;
+  };
+
+  // Instagram 링크를 올바른 형식으로 변환하는 함수
+  const formatInstagramLink = (
+    link: string | null | undefined
+  ): string | undefined => {
+    if (!link) return undefined;
+
+    // 앞뒤 공백 제거
+    const trimmed = link.trim();
+    if (!trimmed) return undefined;
+
+    // 이미 완전한 URL인 경우 (instagram.com 포함)
+    if (/instagram\.com/i.test(trimmed)) {
+      return ensureHttps(trimmed);
+    }
+
+    // 아이디만 있는 경우: @ 제거 후 instagram.com URL 생성
+    const username = trimmed.startsWith("@") ? trimmed.slice(1) : trimmed;
+    return `https://instagram.com/${username}`;
   };
 
   const handleCopyUrl = async () => {
@@ -226,10 +254,10 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {(storeData.instagramLink || storeData.kakaoTalkLink) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-900 mb-2">SNS</h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className={`grid gap-2 ${storeData.instagramLink && storeData.kakaoTalkLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {storeData.instagramLink && (
               <a
-                href={ensureHttps(storeData.instagramLink)}
+                href={formatInstagramLink(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
@@ -290,7 +318,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {(storeData.naverLink || storeData.kakaoLink) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-900 mb-2">지도</h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className={`grid gap-2 ${storeData.naverLink && storeData.kakaoLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {/* Naver Map Link */}
             {storeData.naverLink && (
               <a

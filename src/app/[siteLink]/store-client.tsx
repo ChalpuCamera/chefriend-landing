@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { StoreResponse, FoodItemResponse } from "@/lib/types/store";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface StoreClientProps {
   storeId: number;
@@ -12,11 +13,41 @@ interface StoreClientProps {
 
 export function StoreClient({ storeData, foodsData }: StoreClientProps) {
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [qrCopySuccess, setQrCopySuccess] = useState(false);
+  const qrRef = useRef<HTMLDivElement>(null);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // 외부 클릭 감지로 공유 메뉴 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowShareMenu(false);
+      }
+    };
+
+    if (showShareMenu) {
+      // click 이벤트 대신 mouseup/touchend를 사용하여 버튼 클릭이 먼저 처리되도록
+      setTimeout(() => {
+        document.addEventListener("click", handleClickOutside);
+        document.addEventListener("touchend", handleClickOutside);
+      }, 0);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("touchend", handleClickOutside);
+    };
+  }, [showShareMenu]);
 
   // URL에 https://가 없으면 추가하는 함수
   const ensureHttps = (url: string | null | undefined): string | undefined => {
     if (!url) return undefined;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
+    if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
     return `https://${url}`;
@@ -29,11 +60,104 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
         /^https?:\/\/(www\.)?/,
         ""
       );
-      await navigator.clipboard.writeText(decodedUrl);
+
+      // Clipboard API가 사용 가능한지 확인
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(decodedUrl);
+      } else {
+        // Fallback: textarea를 이용한 복사
+        const textArea = document.createElement("textarea");
+        textArea.value = decodedUrl;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand("copy");
+        } catch (fallbackErr) {
+          console.error("Fallback copy failed:", fallbackErr);
+          alert("URL 복사에 실패했습니다.");
+          return;
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+
       setCopySuccess(true);
+      setShowShareMenu(false);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
       console.error("Failed to copy URL:", err);
+      alert("URL 복사에 실패했습니다.");
+    }
+  };
+
+  const handleShowQr = () => {
+    setShowQrModal(true);
+    setShowShareMenu(false);
+  };
+
+  const handleCopyQr = async () => {
+    try {
+      if (!qrRef.current) return;
+
+      // qrcode.react는 canvas를 생성하므로 canvas를 직접 찾음
+      const canvas = qrRef.current.querySelector("canvas");
+      if (!canvas) {
+        alert("QR 코드를 찾을 수 없습니다.");
+        return;
+      }
+
+      // canvas를 blob으로 변환
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          try {
+            if (navigator.clipboard && navigator.clipboard.write) {
+              await navigator.clipboard.write([
+                new ClipboardItem({ "image/png": blob }),
+              ]);
+              setQrCopySuccess(true);
+              setTimeout(() => setQrCopySuccess(false), 2000);
+            } else {
+              alert("클립보드 복사가 지원되지 않습니다. 다운로드를 사용해주세요.");
+            }
+          } catch (clipboardErr) {
+            console.error("Clipboard write failed:", clipboardErr);
+            alert("클립보드에 복사할 수 없습니다. 다운로드를 사용해주세요.");
+          }
+        }
+      }, "image/png");
+    } catch (err) {
+      console.error("Failed to copy QR code:", err);
+      alert("QR 코드 복사에 실패했습니다.");
+    }
+  };
+
+  const handleDownloadQr = () => {
+    try {
+      if (!qrRef.current) return;
+
+      // qrcode.react는 canvas를 생성하므로 canvas를 직접 찾음
+      const canvas = qrRef.current.querySelector("canvas");
+      if (!canvas) {
+        alert("QR 코드를 찾을 수 없습니다.");
+        return;
+      }
+
+      // canvas를 이미지로 변환하여 다운로드
+      const url = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${storeData.storeName}-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Failed to download QR code:", err);
+      alert("QR 코드 다운로드에 실패했습니다.");
     }
   };
 
@@ -41,12 +165,12 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
     <div className="bg-white w-full mx-auto min-h-screen max-w-[430px]">
       {/* Store Header Image */}
       <div className="p-6 pb-0">
-        <div className="w-full h-64 relative bg-gray-100 rounded-3xl overflow-hidden">
+        <div className="w-full h-52 relative bg-gray-100 rounded-3xl overflow-hidden">
           <Image
-            src={storeData.thumbnailUrl || "/kimchi.png"}
+            src={storeData.thumbnailUrl || "/store.png"}
             alt={storeData.storeName}
             fill
-            quality={90}
+            quality={95}
             className="object-cover"
             priority
           />
@@ -54,7 +178,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       </div>
 
       {/* Store Info */}
-      <div className="p-6 flex flex-col items-center text-center">
+      <div className="p-4 flex flex-col items-center text-center">
         <h1 className="text-title-1 text-gray-900 mb-2">
           {storeData.storeName}
         </h1>
@@ -68,34 +192,51 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             📍 {storeData.address}
           </p>
         )}
-        <p className="text-sub-body-sb text-chefriend mt-3">
-          메뉴 {foodsData.length}개
-        </p>
 
-        {/* URL Copy Button */}
-        <button
-          onClick={handleCopyUrl}
-          className="mt-4 w-full max-w-sm px-6 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all text-body-sb shadow-sm"
-        >
-          {copySuccess ? "✓ 복사 완료!" : "URL 복사"}
-        </button>
+        {/* Share Button with Dropdown */}
+        <div ref={shareMenuRef} className="relative mt-4 w-full max-w-sm">
+          <button
+            onClick={() => setShowShareMenu(!showShareMenu)}
+            className="w-full px-4 py-3 bg-white border-2 border-gray-700 text-gray-700 rounded-3xl hover:bg-gray-900 hover:text-white transition-all text-body-sb shadow-sm"
+          >
+            {copySuccess ? "✓ 복사 완료!" : "공유하기"}
+          </button>
+
+          {/* Dropdown Menu */}
+          {showShareMenu && (
+            <div className="absolute top-full mt-2 w-full bg-white border-2 border-gray-900 rounded-2xl shadow-lg overflow-hidden z-10">
+              <button
+                onClick={handleCopyUrl}
+                className="w-full px-4 py-3 text-body-sb text-gray-900 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+              >
+                URL 복사
+              </button>
+              <button
+                onClick={handleShowQr}
+                className="w-full px-4 py-3 text-body-sb text-gray-900 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
+              >
+                QR 코드 보기
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* SNS Section */}
       {(storeData.instagramLink || storeData.kakaoTalkLink) && (
-        <div className="px-6 mb-6">
-          <h3 className="text-sub-title-b text-gray-900 mb-3">SNS</h3>
-          <div className="grid grid-cols-1 gap-3">
+        <div className="px-6 mb-4">
+          <h3 className="text-sub-title-b text-gray-900 mb-2">SNS</h3>
+          <div className="grid grid-cols-2 gap-2">
             {storeData.instagramLink && (
               <a
                 href={ensureHttps(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl overflow-hidden relative">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
                       <Image
                         src="/instagram.png"
                         alt="Instagram"
@@ -105,7 +246,10 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
+                    <span
+                      className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors truncate"
+                      title={storeData.instagramLink || undefined}
+                    >
                       {storeData.instagramLink}
                     </span>
                   </div>
@@ -117,11 +261,11 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl overflow-hidden relative">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
                       <Image
                         src="/kakaotalk.png"
                         alt="카카오톡"
@@ -131,8 +275,8 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
-                      카카오톡 오픈채팅
+                    <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors truncate">
+                      카카오톡 채널
                     </span>
                   </div>
                 </div>
@@ -144,30 +288,32 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
 
       {/* Map Links Section */}
       {(storeData.naverLink || storeData.kakaoLink) && (
-        <div className="px-6 mb-6">
-          <h3 className="text-sub-title-b text-gray-900 mb-3">지도</h3>
-          <div className="grid grid-cols-2 gap-3">
+        <div className="px-6 mb-4">
+          <h3 className="text-sub-title-b text-gray-900 mb-2">지도</h3>
+          <div className="grid grid-cols-2 gap-2">
             {/* Naver Map Link */}
             {storeData.naverLink && (
               <a
                 href={ensureHttps(storeData.naverLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
               >
-                <div className="w-12 h-12 rounded-xl overflow-hidden relative mb-2">
-                  <Image
-                    src="/naver.png"
-                    alt="Naver Map"
-                    width={144}
-                    height={144}
-                    quality={90}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl overflow-hidden relative">
+                    <Image
+                      src="/naver.png"
+                      alt="Naver Map"
+                      width={144}
+                      height={144}
+                      quality={90}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
+                    네이버 지도
+                  </span>
                 </div>
-                <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
-                  네이버 지도
-                </span>
               </a>
             )}
 
@@ -177,21 +323,23 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 href={ensureHttps(storeData.kakaoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center p-4 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
               >
-                <div className="w-12 h-12 rounded-xl overflow-hidden relative mb-2">
-                  <Image
-                    src="/kakaomap.png"
-                    alt="Kakao Map"
-                    width={144}
-                    height={144}
-                    quality={90}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl overflow-hidden relative">
+                    <Image
+                      src="/kakaomap.png"
+                      alt="Kakao Map"
+                      width={144}
+                      height={144}
+                      quality={90}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
+                    카카오맵
+                  </span>
                 </div>
-                <span className="text-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
-                  카카오맵
-                </span>
               </a>
             )}
           </div>
@@ -203,12 +351,12 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {(storeData.yogiyoLink ||
         storeData.baeminLink ||
         storeData.coupangEatsLink) && (
-        <div className="px-6 mb-6">
-          <h3 className="text-sub-title-b text-gray-800 mb-4">
+        <div className="px-6 mb-4">
+          <h3 className="text-sub-title-b text-gray-800 mb-2">
             바로 주문하러 가기
           </h3>
           {/* Delivery Apps Grid */}
-          <div className="flex gap-4 justify-start">
+          <div className="flex gap-3 justify-start">
             {/* 배달의민족 */}
             {storeData.baeminLink && (
               <a
@@ -217,7 +365,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="w-[74px] overflow-hidden mb-2">
+                <div className="w-12 overflow-hidden mb-2">
                   <Image
                     src="/baemin.png"
                     alt="배달의민족"
@@ -227,7 +375,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-body-sb text-gray-800">배달의민족</p>
+                <p className="text-sub-body-sb text-gray-800">배달의민족</p>
               </a>
             )}
 
@@ -239,7 +387,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="w-[74px] overflow-hidden mb-2">
+                <div className="w-12 overflow-hidden mb-2">
                   <Image
                     src="/coupangeats.png"
                     alt="쿠팡이츠"
@@ -249,10 +397,10 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-body-sb text-gray-800">쿠팡이츠</p>
+                <p className="text-sub-body-sb text-gray-800">쿠팡이츠</p>
               </a>
             )}
-            
+
             {/* 요기요 */}
             {storeData.yogiyoLink && (
               <a
@@ -261,7 +409,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="w-[74px] overflow-hidden mb-2">
+                <div className="w-12 overflow-hidden mb-2">
                   <Image
                     src="/yogiyo.png"
                     alt="요기요"
@@ -271,7 +419,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-body-sb text-gray-800">요기요</p>
+                <p className="text-sub-body-sb text-gray-800">요기요</p>
               </a>
             )}
           </div>
@@ -281,7 +429,12 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {/* Menu List */}
       {foodsData.length > 0 && (
         <div className="px-6 pb-6">
-          <h2 className="text-sub-title-b text-gray-900 mb-4">메뉴</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sub-title-b text-gray-900">메뉴</h2>
+            {foodsData.length > 0 && <p className="text-sub-body-sb text-chefriend">
+              메뉴 {foodsData.length}개
+            </p>}
+          </div>
           <div className="space-y-4">
             {foodsData.map((food) => (
               <div
@@ -343,6 +496,72 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
           <p className="text-sub-body-r text-gray-500">
             등록된 메뉴가 없습니다.
           </p>
+        </div>
+      )}
+
+      {/* QR Code Modal */}
+      {showQrModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowQrModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-6 max-w-sm w-full relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            {/* Modal Title */}
+            <h3 className="text-sub-title-b text-gray-900 text-center mb-6">
+              QR 코드
+            </h3>
+
+            {/* QR Code */}
+            <div
+              ref={qrRef}
+              className="flex justify-center items-center bg-white p-6 rounded-2xl mb-6"
+            >
+              <QRCodeCanvas
+                value={typeof window !== "undefined" ? window.location.href : ""}
+                size={240}
+                level="H"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={handleCopyQr}
+                className="px-4 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all text-body-sb flex items-center justify-center gap-2"
+              >
+                {qrCopySuccess ? "✓ 복사됨" : "복사"}
+              </button>
+              <button
+                onClick={handleDownloadQr}
+                className="px-4 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-all text-body-sb flex items-center justify-center gap-2"
+              >
+                다운로드
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

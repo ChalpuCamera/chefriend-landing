@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import LandingSlider from "@/components/landing/LandingSlider";
 
 export const metadata: Metadata = {
-  title: "셰프랜드 | 진짜 고객 피드백 솔루션",
+  title: "셰프랜드 | 사장님들의 영원한 단짝",
   description:
-    "고객의 진짜 목소리로 사장님의 매출을 올려드려요. 비공개 솔직 피드백으로 메뉴를 개선하고 매출을 증대하세요.",
+    "웹사이트를 만들고 가게를 관리해보세요",
   keywords: [
     "음식점 피드백",
     "고객 평가",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "셰프랜드",
     description:
-      "고객의 진짜 목소리로 사장님의 매출을 올려드려요. 비공개 솔직 피드백으로 메뉴를 개선하고 매출을 증대하세요.",
+      "웹사이트를 만들고 가게를 관리해보세요",
     type: "website",
     locale: "ko_KR",
     url: "/",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "셰프랜드",
     description:
-      "고객의 진짜 목소리로 사장님의 매출을 올려드려요. 비공개 솔직 피드백으로 메뉴를 개선하고 매출을 증대하세요.",
+      "웹사이트를 만들고 가게를 관리해보세요",
     images: ["/landing1.png"],
   },
 };

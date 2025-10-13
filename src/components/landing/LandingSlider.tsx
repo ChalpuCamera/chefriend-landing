@@ -129,6 +129,26 @@ export default function LandingSlider() {
     return () => clearInterval(timer);
   }, [slides.length]);
 
+  // Prevent body scroll on landing page
+  useEffect(() => {
+    // body와 html에 overflow hidden 적용
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    // iOS Safari에서 bounce 효과 방지
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+
+    return () => {
+      // 컴포넌트 언마운트 시 원래대로 복구
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+    };
+  }, []);
+
   // Prevent passive touch events only for horizontal drag
   useEffect(() => {
     const element = containerRef.current;
@@ -149,12 +169,12 @@ export default function LandingSlider() {
   }, [isDragging, dragDirection]);
 
   return (
-    <div className="relative w-full h-screen bg-white flex flex-col">
+    <div className="relative w-full h-screen bg-white flex flex-col overflow-hidden">
       {/* Container - 430px 고정 폭 */}
-      <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[62px] pb-[50px] px-6">
+      <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[16px] pb-[40px] px-6">
         {/* Logo Section - 상단 중앙 */}
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-[187px] h-[42px] relative flex-shrink-0">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <div className="w-[170px] h-[38px] relative flex-shrink-0">
             <Image
               src="/logo_big.png"
               alt="셰프랜드 로고"
@@ -167,7 +187,7 @@ export default function LandingSlider() {
         {/* iPhone Mockup Section - 중앙 (드래그 가능) */}
         <div
           ref={containerRef}
-          className="relative flex-shrink-0 h-[400px] flex items-center justify-center mb-6 cursor-grab active:cursor-grabbing select-none"
+          className="relative flex-shrink-0 h-[300px] flex items-center justify-center mb-3 cursor-grab active:cursor-grabbing select-none"
           onTouchStart={touchStart}
           onTouchMove={touchMove}
           onTouchEnd={touchEnd}
@@ -180,10 +200,10 @@ export default function LandingSlider() {
             }
           }}
         >
-          <div className="relative w-full h-[397px] overflow-hidden flex items-center justify-center">
+          <div className="relative w-full h-[300px] overflow-hidden flex items-center justify-center">
             {/* Current Slide */}
             <div
-              className="relative w-[233px] h-[397px]"
+              className="relative w-[175px] h-[300px]"
               style={{
                 transform: `translateX(${currentTranslate}px)`,
                 transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -205,10 +225,10 @@ export default function LandingSlider() {
             {/* Next Slide Preview (right side) */}
             {currentTranslate < 0 && (
               <div
-                className="absolute top-0 w-[233px] h-[397px] opacity-40"
+                className="absolute top-0 w-[175px] h-[300px] opacity-40"
                 style={{
                   left: '50%',
-                  marginLeft: '116.5px',
+                  marginLeft: '87.5px',
                   transform: `translateX(${80 + currentTranslate}px)`,
                 }}
               >
@@ -227,10 +247,10 @@ export default function LandingSlider() {
             {/* Previous Slide Preview (left side) */}
             {currentTranslate > 0 && (
               <div
-                className="absolute top-0 w-[233px] h-[397px] opacity-40"
+                className="absolute top-0 w-[175px] h-[300px] opacity-40"
                 style={{
                   right: '50%',
-                  marginRight: '116.5px',
+                  marginRight: '87.5px',
                   transform: `translateX(${-80 + currentTranslate}px)`,
                 }}
               >
@@ -248,21 +268,37 @@ export default function LandingSlider() {
           </div>
         </div>
 
+        {/* Dots Indicator - 이미지 바로 아래 */}
+        <div className="flex justify-center gap-[6px] mb-3">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide
+                  ? "bg-[#7c3bc6]"
+                  : "bg-[#dee1e6] hover:bg-[#bcc1ca]"
+              }`}
+              aria-label={`슬라이드 ${index + 1}로 이동`}
+            />
+          ))}
+        </div>
+
         {/* Content Section - 하단 */}
         <div className="flex-1 flex flex-col">
           {/* Title and Description */}
-          <div className="text-left mb-4">
-            <h2 className="text-[24px] font-bold text-[#171a1f] leading-[36px] mb-1">
+          <div className="text-left mb-3">
+            <h2 className="text-[22px] font-bold text-[#171a1f] leading-[32px] mb-1">
               {slides[currentSlide].title}
             </h2>
-            <p className="text-[14px] text-[#9095a0] leading-[26px]">
+            <p className="text-[13px] text-[#9095a0] leading-[22px]">
               {slides[currentSlide].description}
             </p>
           </div>
 
           {/* URL Input */}
-          <div className="bg-white border border-[#dee1e6] rounded-lg px-3 py-[12px] flex items-center mb-4">
-            <span className="text-[#9095a0] text-[18px] leading-[20px] font-normal">
+          <div className="bg-white border border-[#dee1e6] rounded-lg px-3 py-[8px] flex items-center mb-3">
+            <span className="text-[#9095a0] text-[16px] leading-[20px] font-normal">
               chefriend.kr/
             </span>
             <div className="flex-1 ml-0 min-w-0">
@@ -271,7 +307,7 @@ export default function LandingSlider() {
                 value={customUrl}
                 onChange={(e) => setCustomUrl(e.target.value)}
                 placeholder=""
-                className="w-full px-1 py-0 outline-none text-[18px] text-[#565d6d] bg-white border-0 leading-[28px]"
+                className="w-full px-1 py-0 outline-none text-[16px] text-[#565d6d] bg-white border-0 leading-[20px]"
                 style={{ fontFamily: "'Nunito', sans-serif" }}
               />
             </div>
@@ -283,39 +319,23 @@ export default function LandingSlider() {
             onClick={() => {
               trackCtaClick(currentSlide + 1, slides[currentSlide].buttonText);
             }}
-            className="w-full bg-[#7c3bc6] hover:bg-[#6b32ad] text-white font-bold text-[18px] leading-[28px] py-[12px] rounded-xl transition-colors mb-4 block text-center"
+            className="w-full bg-[#7c3bc6] hover:bg-[#6b32ad] text-white font-bold text-[17px] leading-[26px] py-[10px] rounded-xl transition-colors mb-3 block text-center"
           >
             {slides[currentSlide].buttonText}
           </Link>
 
           {/* Login Link */}
-          <div className="text-center mb-4">
+          <div className="text-center">
             <Link
               href="/login"
               onClick={() => {
                 trackLandingLoginLinkClick('landing_page_bottom');
               }}
-              className="text-[#171a1f] font-bold text-[18px] leading-[28px] hover:text-[#565d6d] transition-colors inline-block"
+              className="text-[#171a1f] font-bold text-[16px] leading-[24px] hover:text-[#565d6d] transition-colors inline-block"
               style={{ fontFamily: "'Nunito', 'Noto Sans KR', sans-serif" }}
             >
               로그인
             </Link>
-          </div>
-
-          {/* Dots Indicator */}
-          <div className="flex justify-center gap-[6px]">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentSlide
-                    ? "bg-[#7c3bc6]"
-                    : "bg-[#dee1e6] hover:bg-[#bcc1ca]"
-                }`}
-                aria-label={`슬라이드 ${index + 1}로 이동`}
-              />
-            ))}
           </div>
         </div>
       </div>

@@ -12,11 +12,18 @@ export default function LoginPage() {
     // 페이지 진입 시 body 스크롤 방지
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
+    // iOS Safari에서 bounce 효과 방지
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
 
     // 페이지 이탈 시 원복
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
     };
   }, []);
 
@@ -31,11 +38,11 @@ export default function LoginPage() {
   return (
     <div className="fixed inset-0 w-full h-full bg-white flex flex-col overflow-hidden">
       {/* Container - 430px 고정 폭 */}
-      <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[62px] pb-[50px] px-6">
+      <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[16px] pb-[40px] px-6">
         {/* Back Button - 절대 위치 */}
         <button
           onClick={() => router.back()}
-          className="absolute left-6 top-[62px] w-8 h-8 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors z-10"
+          className="absolute left-6 top-[16px] w-8 h-8 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors z-10"
           aria-label="뒤로가기"
         >
           <svg
@@ -56,8 +63,8 @@ export default function LoginPage() {
         </button>
 
         {/* Logo Section - 상단 중앙 */}
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-[187px] h-[42px] relative flex-shrink-0">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <div className="w-[170px] h-[38px] relative flex-shrink-0">
             <Image
               src="/logo_big.png"
               alt="셰프랜드 로고"
@@ -68,21 +75,21 @@ export default function LoginPage() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col items-center justify-start pt-8">
+        <div className="flex-1 flex flex-col items-center justify-start pt-20">
           {/* Title */}
-          <h1 className="text-[30px] font-bold text-[#171a1f] leading-[48px] text-center mb-20">
+          <h1 className="text-[30px] font-bold text-[#171a1f] leading-[44px] text-center mb-32">
             링크로 시작하는 가게 홍보
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[16px] text-[#9095a0] leading-[26px] text-center mb-6">
+          <p className="text-[17px] text-[#9095a0] leading-[28px] text-center mb-10">
             무료로 회원가입하세요!
           </p>
 
           {/* Kakao Login Button */}
           <button
             onClick={handleKakaoLogin}
-            className="w-full max-w-[343px] h-[56px] bg-[#ffe812] hover:bg-[#fdd835] rounded-xl flex items-center justify-center gap-2 transition-colors"
+            className="w-full max-w-[343px] h-[52px] bg-[#ffe812] hover:bg-[#fdd835] rounded-xl flex items-center justify-center gap-2 transition-colors"
           >
             <div className="w-6 h-6 relative">
               <svg
@@ -98,7 +105,7 @@ export default function LoginPage() {
                 />
               </svg>
             </div>
-            <span className="text-[18px] font-bold text-[#3c1e1c] leading-[24px]">
+            <span className="text-[17px] font-bold text-[#3c1e1c] leading-[24px]">
               카카오로 로그인하기
             </span>
           </button>

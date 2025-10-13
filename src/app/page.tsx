@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import BrandHeader from "@/components/landing/BrandHeader";
-import Header from "@/components/landing/Header";
-import FeaturesSection from "@/components/landing/FeaturesSection";
-import DifferentiationSection from "@/components/landing/DifferentiationSection";
-import ProblemSection from "@/components/landing/ProblemSection";
-import FooterSection from "@/components/landing/FooterSection";
-import FloatingCtaButton from "@/components/landing/FloatingCtaButton";
-import { Toaster as Sonner } from "@/components/landing/ui/sonner";
+import LandingSlider from "@/components/landing/LandingSlider";
 
 export const metadata: Metadata = {
   title: "셰프랜드 | 진짜 고객 피드백 솔루션",
@@ -37,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "셰프랜드",
     images: [
       {
-        url: "/thumbnail.png",
+        url: "/landing1.png",
         width: 1200,
         height: 630,
         alt: "chefriend - 사장님을 위한 진짜 고객 피드백 솔루션",
@@ -49,7 +42,7 @@ export const metadata: Metadata = {
     title: "셰프랜드",
     description:
       "고객의 진짜 목소리로 사장님의 매출을 올려드려요. 비공개 솔직 피드백으로 메뉴를 개선하고 매출을 증대하세요.",
-    images: ["/thumbnail.png"],
+    images: ["/landing1.png"],
   },
 };
 
@@ -88,7 +81,7 @@ export default function Home() {
           "@type": "ImageObject",
           inLanguage: "ko-KR",
           "@id": "https://www.chefriend.com/#/schema/logo/image/",
-          url: "https://www.chefriend.com/thumbnail.png",
+          url: "https://www.chefriend.com/landing1.png",
           contentUrl: "https://www.chefriend.com/logo.png",
           width: 512,
           height: 512,
@@ -146,15 +139,8 @@ export default function Home() {
         }}
       />
 
-      <Sonner />
-      <main className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-        <BrandHeader />
-        <Header />
-        <ProblemSection />
-        <FeaturesSection />
-        <DifferentiationSection />
-        <FooterSection />
-        <FloatingCtaButton />
+      <main className="min-h-screen">
+        <LandingSlider />
       </main>
     </>
   );

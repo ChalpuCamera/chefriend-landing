@@ -139,28 +139,38 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
         return;
       }
 
-      // canvas를 blob으로 변환
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          try {
-            if (navigator.clipboard && navigator.clipboard.write) {
-              await navigator.clipboard.write([
-                new ClipboardItem({ "image/png": blob }),
-              ]);
-              setQrCopySuccess(true);
-              setTimeout(() => setQrCopySuccess(false), 2000);
-            } else {
-              alert("클립보드 복사가 지원되지 않습니다. 다운로드를 사용해주세요.");
-            }
-          } catch (clipboardErr) {
-            console.error("Clipboard write failed:", clipboardErr);
-            alert("클립보드에 복사할 수 없습니다. 다운로드를 사용해주세요.");
-          }
-        }
-      }, "image/png");
+      // Clipboard API 지원 확인
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        alert("클립보드 복사가 지원되지 않는 브라우저입니다. 다운로드를 사용해주세요.");
+        return;
+      }
+
+      // 동기적으로 dataURL 생성 (사용자 제스처 컨텍스트 유지)
+      const dataUrl = canvas.toDataURL("image/png");
+
+      // dataURL을 blob으로 변환
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+
+      // 클립보드에 이미지 쓰기
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob }),
+      ]);
+
+      setQrCopySuccess(true);
+      setTimeout(() => setQrCopySuccess(false), 2000);
     } catch (err) {
       console.error("Failed to copy QR code:", err);
-      alert("QR 코드 복사에 실패했습니다.");
+
+      // 에러 메시지 개선
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      if (errorMessage.includes("denied") || errorMessage.includes("permission")) {
+        alert("클립보드 접근 권한이 필요합니다. 브라우저 설정을 확인해주세요.");
+      } else if (errorMessage.includes("secure") || errorMessage.includes("https")) {
+        alert("보안 연결(HTTPS)에서만 복사할 수 있습니다.");
+      } else {
+        alert("클립보드에 복사할 수 없습니다. 다운로드를 사용해주세요.");
+      }
     }
   };
 

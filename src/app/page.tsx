@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LandingSlider from "@/components/landing/LandingSlider";
 
 export const metadata: Metadata = {
-  title: "셰프랜드 | 사장님들의 영원한 단짝",
+  title: "셰프랜드 | 사장님의 영원한 단짝",
   description:
     "웹사이트를 만들고 가게를 관리해보세요",
   keywords: [

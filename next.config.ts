@@ -24,7 +24,17 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.chalpu.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
+    unoptimized: false, // 기본 최적화는 유지
+    // cdn.chalpu.com은 403 에러 발생 시 원본 사용
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
   },
 
   // headers는 정적 export에서 작동하지 않으므로 주석 처리

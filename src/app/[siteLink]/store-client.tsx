@@ -585,13 +585,13 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             </div>
 
             {/* Action Buttons */}
-            <div className="grid grid-cols-2 gap-2">
-              <button
+            <div className="grid grid-cols-1 gap-2">
+              {/* <button
                 onClick={handleCopyQr}
                 className="px-4 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all text-body-sb flex items-center justify-center gap-2"
               >
                 {qrCopySuccess ? "✓ 복사됨" : "복사"}
-              </button>
+              </button> */}
               <button
                 onClick={handleDownloadQr}
                 className="px-4 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-all text-body-sb flex items-center justify-center gap-2"

@@ -1,4 +1,30 @@
 // app/privacy/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "개인정보처리방침",
+  description:
+    "셰프랜드의 개인정보처리방침입니다. 개인정보의 처리 목적, 수집 항목, 보유 기간, 제3자 제공, 안전성 확보조치 등에 대해 안내합니다.",
+  keywords: [
+    "개인정보처리방침",
+    "개인정보보호",
+    "정보 보호",
+    "개인정보 수집",
+    "셰프랜드 개인정보",
+  ],
+  alternates: {
+    canonical: "/privacy",
+  },
+  openGraph: {
+    title: "개인정보처리방침 - 셰프랜드",
+    description: "셰프랜드의 개인정보처리방침입니다.",
+    type: "website",
+    locale: "ko_KR",
+    url: "/privacy",
+    siteName: "셰프랜드",
+  },
+};
+
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-white">

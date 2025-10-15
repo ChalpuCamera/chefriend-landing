@@ -1,3 +1,30 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "운영정책",
+  description:
+    "셰프랜드 서비스의 공정하고 안정적인 운영을 위한 운영정책입니다. 서비스 이용 기준, 콘텐츠 제한 기준, 부정이용 및 제재 조치에 대해 안내합니다.",
+  keywords: [
+    "셰프랜드 운영정책",
+    "서비스 이용약관",
+    "이용 규칙",
+    "콘텐츠 정책",
+    "부정이용 제재",
+  ],
+  alternates: {
+    canonical: "/operation",
+  },
+  openGraph: {
+    title: "운영정책 - 셰프랜드",
+    description:
+      "셰프랜드 서비스의 공정하고 안정적인 운영을 위한 운영정책입니다.",
+    type: "website",
+    locale: "ko_KR",
+    url: "/operation",
+    siteName: "셰프랜드",
+  },
+};
+
 export default function Operation() {
   return (
     <div className="min-h-screen bg-white">

@@ -1,4 +1,30 @@
 // app/terms/page.tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "이용약관",
+  description:
+    "셰프랜드 서비스 이용약관입니다. 회원가입, 서비스 이용, 권리와 의무, 계약 해지, 손해배상 등 서비스 이용에 필요한 사항을 안내합니다.",
+  keywords: [
+    "이용약관",
+    "서비스 약관",
+    "회원 약관",
+    "셰프랜드 약관",
+    "이용 규칙",
+  ],
+  alternates: {
+    canonical: "/term",
+  },
+  openGraph: {
+    title: "이용약관 - 셰프랜드",
+    description: "셰프랜드 서비스 이용약관입니다.",
+    type: "website",
+    locale: "ko_KR",
+    url: "/term",
+    siteName: "셰프랜드",
+  },
+};
+
 export default function Terms() {
   return (
     <div className="min-h-screen bg-white">

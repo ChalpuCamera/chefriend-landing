@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { trackKakaoLoginClick } from "@/lib/analytics";
+import { logButtonClick } from "@/lib/api/tracking";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,8 +29,11 @@ export default function LoginPage() {
   }, []);
 
   const handleKakaoLogin = () => {
-    // GA4 이벤트 추적
+    // GA4 이벤트 추적 (기존)
     trackKakaoLoginClick('login_page');
+
+    // 백엔드 버튼 로그 추적 (신규)
+    logButtonClick('KAKAO_LOGIN');
 
     // 백엔드 OAuth URL로 리디렉션하여 카카오 로그인 시작
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth2/authorization/kakao/owner`;

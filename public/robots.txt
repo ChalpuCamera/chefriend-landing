@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.chefriend.com/sitemap.xml
+# 로그인 페이지는 검색엔진에 노출하지 않음
+Disallow: /login
+
+# Sitemap 위치
+Sitemap: https://www.chefriend.kr/sitemap.xml

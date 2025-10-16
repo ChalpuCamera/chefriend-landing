@@ -9,12 +9,13 @@ import { logButtonClick } from "@/lib/api/tracking";
 export default function LandingSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [customUrl, setCustomUrl] = useState("");
-  const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const [currentTranslate, setCurrentTranslate] = useState(0);
-  const [startTime, setStartTime] = useState(0);
-  const [dragDirection, setDragDirection] = useState<'horizontal' | 'vertical' | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  // 드래그 기능 비활성화 - 주석 처리됨
+  // const [isDragging, setIsDragging] = useState(false);
+  // const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  // const [currentTranslate, setCurrentTranslate] = useState(0);
+  // const [startTime, setStartTime] = useState(0);
+  // const [dragDirection, setDragDirection] = useState<'horizontal' | 'vertical' | null>(null);
+  // const containerRef = useRef<HTMLDivElement>(null);
 
   const slides = [
     {
@@ -42,10 +43,10 @@ export default function LandingSlider() {
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
-    setCurrentTranslate(0);
+    // setCurrentTranslate(0); // 드래그 기능 비활성화로 주석 처리
   };
 
-
+  /* ===== 드래그 기능 비활성화 - 주석 처리됨 =====
   // Touch/Mouse event handlers for dragging
   const getPosition = (event: TouchEvent | MouseEvent) => {
     if (event.type.includes("mouse")) {
@@ -120,6 +121,7 @@ export default function LandingSlider() {
       containerRef.current.style.cursor = "grab";
     }
   };
+  ===== 드래그 기능 주석 처리 끝 ===== */
 
   // Auto slide every 5 seconds
   useEffect(() => {
@@ -150,6 +152,7 @@ export default function LandingSlider() {
     };
   }, []);
 
+  /* ===== 드래그 터치 이벤트 리스너 비활성화 - 주석 처리됨 =====
   // Prevent passive touch events only for horizontal drag
   useEffect(() => {
     const element = containerRef.current;
@@ -168,6 +171,7 @@ export default function LandingSlider() {
       element.removeEventListener('touchmove', handleTouchMove);
     };
   }, [isDragging, dragDirection]);
+  ===== 드래그 터치 이벤트 주석 처리 끝 ===== */
 
   return (
     <div className="relative w-full h-screen bg-white flex flex-col overflow-hidden">
@@ -185,10 +189,11 @@ export default function LandingSlider() {
           </div>
         </div>
 
-        {/* iPhone Mockup Section - 중앙 (드래그 가능) */}
+        {/* iPhone Mockup Section - 중앙 (드래그 기능 비활성화) */}
         <div
+          className="relative flex-shrink-0 h-[300px] flex items-center justify-center mb-3 select-none"
+          {/* 드래그 이벤트 핸들러 모두 제거됨
           ref={containerRef}
-          className="relative flex-shrink-0 h-[300px] flex items-center justify-center mb-3 cursor-grab active:cursor-grabbing select-none"
           onTouchStart={touchStart}
           onTouchMove={touchMove}
           onTouchEnd={touchEnd}
@@ -200,16 +205,19 @@ export default function LandingSlider() {
               touchEnd();
             }
           }}
+          */}
         >
           <div className="relative w-full h-[300px] overflow-hidden flex items-center justify-center">
             {/* Current Slide */}
             <div
               className="relative w-[175px] h-[300px]"
+              {/* 드래그 애니메이션 제거됨
               style={{
                 transform: `translateX(${currentTranslate}px)`,
                 transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
                 willChange: 'transform',
               }}
+              */}
             >
               <Image
                 src={slides[currentSlide].image}
@@ -223,7 +231,8 @@ export default function LandingSlider() {
               />
             </div>
 
-            {/* Next Slide Preview (right side) */}
+            {/* ===== 좌우 슬라이드 프리뷰 비활성화 - 주석 처리됨 =====
+            Next Slide Preview (right side)
             {currentTranslate < 0 && (
               <div
                 className="absolute top-0 w-[175px] h-[300px] opacity-40"
@@ -245,7 +254,7 @@ export default function LandingSlider() {
               </div>
             )}
 
-            {/* Previous Slide Preview (left side) */}
+            Previous Slide Preview (left side)
             {currentTranslate > 0 && (
               <div
                 className="absolute top-0 w-[175px] h-[300px] opacity-40"
@@ -266,6 +275,7 @@ export default function LandingSlider() {
                 />
               </div>
             )}
+            ===== 좌우 슬라이드 프리뷰 주석 처리 끝 ===== */}
           </div>
         </div>
 

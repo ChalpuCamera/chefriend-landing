@@ -190,35 +190,12 @@ export default function LandingSlider() {
         </div>
 
         {/* iPhone Mockup Section - 중앙 (드래그 기능 비활성화) */}
-        <div
-          className="relative flex-shrink-0 h-[300px] flex items-center justify-center mb-3 select-none"
-          {/* 드래그 이벤트 핸들러 모두 제거됨
-          ref={containerRef}
-          onTouchStart={touchStart}
-          onTouchMove={touchMove}
-          onTouchEnd={touchEnd}
-          onMouseDown={touchStart}
-          onMouseMove={touchMove}
-          onMouseUp={touchEnd}
-          onMouseLeave={() => {
-            if (isDragging) {
-              touchEnd();
-            }
-          }}
-          */}
-        >
+        {/* 드래그 이벤트 핸들러 모두 제거됨: ref, onTouchStart, onTouchMove, onTouchEnd, onMouseDown, onMouseMove, onMouseUp, onMouseLeave */}
+        <div className="relative flex-shrink-0 h-[300px] flex items-center justify-center mb-3 select-none">
           <div className="relative w-full h-[300px] overflow-hidden flex items-center justify-center">
             {/* Current Slide */}
-            <div
-              className="relative w-[175px] h-[300px]"
-              {/* 드래그 애니메이션 제거됨
-              style={{
-                transform: `translateX(${currentTranslate}px)`,
-                transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                willChange: 'transform',
-              }}
-              */}
-            >
+            {/* 드래그 애니메이션 제거됨: style={{ transform, transition, willChange }} */}
+            <div className="relative w-[175px] h-[300px]">
               <Image
                 src={slides[currentSlide].image}
                 alt={slides[currentSlide].title}

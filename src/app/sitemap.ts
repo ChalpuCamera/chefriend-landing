@@ -87,7 +87,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 2. 동적 가게 페이지
   const stores = await fetchAllStores();
 
-  const dynamicPages: MetadataRoute.Sitemap = stores.map((store) => ({
+  // siteLink가 유효한 가게만 필터링
+  const validStores = stores.filter(
+    (store) => store.siteLink && store.siteLink.trim() !== ''
+  );
+
+  const dynamicPages: MetadataRoute.Sitemap = validStores.map((store) => ({
     url: `${SITE_URL}/${encodeURIComponent(store.siteLink)}`,
     lastModified: store.updatedAt ? new Date(store.updatedAt) : new Date(),
     changeFrequency: 'weekly',

@@ -1,17 +1,7 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import GoogleAnalytics from "@/components/lib/GoogleAnalytics";
 import { Suspense } from "react";
-
-// 폰트 최적화: 필요한 weight만 로드하고 display=swap 사용
-const notoSansKR = Noto_Sans_KR({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  display: "swap",
-  variable: "--font-noto-sans-kr",
-  preload: true,
-});
 
 function LoadingFallback() {
   return (
@@ -72,12 +62,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Preconnect for critical resources */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        {/* Pretendard Font */}
         <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
         />
         <link rel="preconnect" href="https://cdn.chefriend.com" />
 
@@ -99,7 +89,7 @@ export default function RootLayout({
         />
         <GoogleAnalytics />
       </head>
-      <body className={`${notoSansKR.variable} font-noto antialiased`}>
+      <body className="font-pretendard antialiased">
         <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
       </body>
     </html>

@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import type { StoreResponse, FoodItemResponse } from "@/lib/types/store";
 import { QRCodeCanvas } from "qrcode.react";
+import { CouponPhoneSheet } from "@/components/coupon/CouponPhoneSheet";
 
 interface StoreClientProps {
   storeId: number;
@@ -11,10 +13,12 @@ interface StoreClientProps {
   foodsData: FoodItemResponse[];
 }
 
-export function StoreClient({ storeData, foodsData }: StoreClientProps) {
+export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps) {
+  const router = useRouter();
   const [copySuccess, setCopySuccess] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showCouponSheet, setShowCouponSheet] = useState(false);
   const [qrCopySuccess, setQrCopySuccess] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
@@ -199,6 +203,15 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
     }
   };
 
+  const handleCouponClick = () => {
+    const savedPhone = localStorage.getItem(`coupon_phone_${storeData.siteLink}`);
+    if (savedPhone) {
+      router.push(`/${storeData.siteLink}/coupon?phone=${encodeURIComponent(savedPhone)}`);
+    } else {
+      setShowCouponSheet(true);
+    }
+  };
+
   return (
     <div className="bg-white w-full mx-auto min-h-screen max-w-[430px]">
       {/* Store Header Image */}
@@ -217,7 +230,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
 
       {/* Store Info */}
       <div className="p-4 flex flex-col items-center text-center">
-        <h1 className="text-title-1 text-gray-900 mb-2">
+        <h1 className="text-title-1 text-gray-800 mb-2">
           {storeData.storeName}
         </h1>
         {storeData.description && (
@@ -235,42 +248,52 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
         <div ref={shareMenuRef} className="relative mt-4 w-full max-w-sm">
           <button
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full px-4 py-3 bg-white border-2 border-gray-700 text-gray-700 rounded-3xl hover:bg-gray-900 hover:text-white transition-all text-body-sb shadow-sm"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-800 text-gray-800 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
           >
             {copySuccess ? "✓ 복사 완료!" : "공유하기"}
           </button>
 
           {/* Dropdown Menu */}
           {showShareMenu && (
-            <div className="absolute top-full mt-2 w-full bg-white border-2 border-gray-900 rounded-2xl shadow-lg overflow-hidden z-10">
+            <div className="absolute top-full mt-2 w-full bg-white border-2 border-gray-800 rounded-2xl shadow-lg overflow-hidden z-10">
               <button
                 onClick={handleCopyUrl}
-                className="w-full px-4 py-3 text-body-sb text-gray-900 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 text-body-sb text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
               >
                 URL 복사
               </button>
               <button
                 onClick={handleShowQr}
-                className="w-full px-4 py-3 text-body-sb text-gray-900 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
+                className="w-full px-4 py-3 text-body-sb text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
               >
                 QR 코드 보기
               </button>
             </div>
           )}
         </div>
+
+        {/* Coupon Button */}
+        <div className="w-full max-w-sm mt-2">
+          <button
+            onClick={handleCouponClick}
+            className="w-full px-4 py-3 bg-white border-2 border-gray-800 text-gray-800 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
+          >
+            쿠폰 적립/사용
+          </button>
+        </div>
       </div>
 
       {/* SNS Section */}
       {(storeData.instagramLink || storeData.kakaoTalkLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-900 mb-2">SNS</h3>
+          <h3 className="text-sub-title-b text-gray-800 mb-2">SNS</h3>
           <div className={`grid gap-2 ${storeData.instagramLink && storeData.kakaoTalkLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {storeData.instagramLink && (
               <a
                 href={formatInstagramLink(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -285,7 +308,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                       />
                     </div>
                     <span
-                      className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors truncate"
+                      className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate"
                       title={storeData.instagramLink || undefined}
                     >
                       {storeData.instagramLink}
@@ -299,7 +322,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -313,7 +336,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors truncate">
+                    <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate">
                       카카오톡 채널
                     </span>
                   </div>
@@ -327,7 +350,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {/* Map Links Section */}
       {(storeData.naverLink || storeData.kakaoLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-900 mb-2">지도</h3>
+          <h3 className="text-sub-title-b text-gray-800 mb-2">지도</h3>
           <div className={`grid gap-2 ${storeData.naverLink && storeData.kakaoLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
             {/* Naver Map Link */}
             {storeData.naverLink && (
@@ -335,7 +358,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 href={ensureHttps(storeData.naverLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl overflow-hidden relative">
@@ -348,7 +371,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
+                  <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors">
                     네이버 지도
                   </span>
                 </div>
@@ -361,7 +384,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 href={ensureHttps(storeData.kakaoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-900 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl overflow-hidden relative">
@@ -374,7 +397,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sub-body-sb text-gray-900 group-hover:text-chefriend transition-colors">
+                  <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors">
                     카카오맵
                   </span>
                 </div>
@@ -390,7 +413,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
         storeData.baeminLink ||
         storeData.coupangEatsLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-800 mb-2">
+          <h3 className="text-sub-title-b text-gray-700 mb-2">
             바로 주문하러 가기
           </h3>
           {/* Delivery Apps Grid */}
@@ -413,7 +436,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-800">배달의민족</p>
+                <p className="text-sub-body-sb text-gray-700">배달의민족</p>
               </a>
             )}
 
@@ -435,7 +458,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-800">쿠팡이츠</p>
+                <p className="text-sub-body-sb text-gray-700">쿠팡이츠</p>
               </a>
             )}
 
@@ -457,7 +480,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-800">요기요</p>
+                <p className="text-sub-body-sb text-gray-700">요기요</p>
               </a>
             )}
           </div>
@@ -468,7 +491,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
       {foodsData.length > 0 && (
         <div className="px-6 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sub-title-b text-gray-900">메뉴</h2>
+            <h2 className="text-sub-title-b text-gray-800">메뉴</h2>
             {foodsData.length > 0 && <p className="text-sub-body-sb text-chefriend">
               메뉴 {foodsData.length}개
             </p>}
@@ -492,7 +515,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                       className="rounded-lg object-cover w-24 h-24"
                     />
                     <div className="flex-1">
-                      <h3 className="text-headline-b text-gray-900">
+                      <h3 className="text-headline-b text-gray-800">
                         {food.foodName}
                       </h3>
                       {food.description && (
@@ -508,7 +531,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
                 ) : (
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-headline-b text-gray-900">
+                      <h3 className="text-headline-b text-gray-800">
                         {food.foodName}
                       </h3>
                       <p className="text-body-sb text-chefriend">
@@ -550,7 +573,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             {/* Close Button */}
             <button
               onClick={() => setShowQrModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-800 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -568,7 +591,7 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             </button>
 
             {/* Modal Title */}
-            <h3 className="text-sub-title-b text-gray-900 text-center mb-6">
+            <h3 className="text-sub-title-b text-gray-800 text-center mb-6">
               QR 코드
             </h3>
 
@@ -588,13 +611,13 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
             <div className="grid grid-cols-1 gap-2">
               {/* <button
                 onClick={handleCopyQr}
-                className="px-4 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-all text-body-sb flex items-center justify-center gap-2"
+                className="px-4 py-3 bg-white border-2 border-gray-800 text-gray-800 rounded-full hover:bg-gray-800 hover:text-white transition-all text-body-sb flex items-center justify-center gap-2"
               >
                 {qrCopySuccess ? "✓ 복사됨" : "복사"}
               </button> */}
               <button
                 onClick={handleDownloadQr}
-                className="px-4 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-all text-body-sb flex items-center justify-center gap-2"
+                className="px-4 py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all text-body-sb flex items-center justify-center gap-2"
               >
                 다운로드
               </button>
@@ -602,6 +625,14 @@ export function StoreClient({ storeData, foodsData }: StoreClientProps) {
           </div>
         </div>
       )}
+
+      {/* Coupon Phone Sheet */}
+      <CouponPhoneSheet
+        open={showCouponSheet}
+        onClose={() => setShowCouponSheet(false)}
+        siteLink={storeData.siteLink}
+        storeId={storeId}
+      />
     </div>
   );
 }

@@ -10,6 +10,7 @@ import * as couponApi from "@/lib/api/coupon"
 interface MembershipData {
   currentStamps: number
   canRedeem: boolean
+  requiredStamps: number
 }
 
 interface PinData {
@@ -154,7 +155,7 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
 
       {/* Coupon Card */}
       {membership && (
-        <CouponCard currentStamps={membership.currentStamps} />
+        <CouponCard currentStamps={membership.currentStamps} totalStamps={membership.requiredStamps} />
       )}
 
       {/* Action Buttons */}

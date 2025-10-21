@@ -4,6 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
 interface CouponMembershipResponse {
   currentStamps: number;
   canRedeem: boolean;
+  requiredStamps: number;
 }
 
 interface CouponGeneratePinResponse {

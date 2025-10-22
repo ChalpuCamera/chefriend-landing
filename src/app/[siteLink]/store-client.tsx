@@ -280,20 +280,25 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
           >
             쿠폰 적립/사용
           </button>
+          {storeData.requiredStampsForCoupon && (
+            <p className="text-sub-body-r text-gray-500 text-center mt-2">
+              🎫 스탬프 {storeData.requiredStampsForCoupon}개로 쿠폰 사용 가능
+            </p>
+          )}
         </div>
       </div>
 
       {/* SNS Section */}
-      {(storeData.instagramLink || storeData.kakaoTalkLink) && (
+      {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-800 mb-2">SNS</h3>
-          <div className={`grid gap-2 ${storeData.instagramLink && storeData.kakaoTalkLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <div className="grid grid-cols-2 gap-2">
             {storeData.instagramLink && (
               <a
                 href={formatInstagramLink(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -322,7 +327,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -343,38 +348,60 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 </div>
               </a>
             )}
+            {storeData.daangnLink && (
+              <a
+                href={ensureHttps(storeData.daangnLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
+                      <Image
+                        src="/daangn.png"
+                        alt="당근"
+                        width={144}
+                        height={144}
+                        quality={90}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate">
+                      당근
+                    </span>
+                  </div>
+                </div>
+              </a>
+            )}
           </div>
         </div>
       )}
 
       {/* Map Links Section */}
-      {(storeData.naverLink || storeData.kakaoLink) && (
+      {(storeData.naverLink || storeData.kakaoLink || storeData.googleMapsLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-800 mb-2">지도</h3>
-          <div className={`grid gap-2 ${storeData.naverLink && storeData.kakaoLink ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          <h3 className="text-sub-title-b text-gray-700 mb-2">지도</h3>
+          <div className="flex gap-3 justify-start">
             {/* Naver Map Link */}
             {storeData.naverLink && (
               <a
                 href={ensureHttps(storeData.naverLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl overflow-hidden relative">
-                    <Image
-                      src="/naver.png"
-                      alt="Naver Map"
-                      width={144}
-                      height={144}
-                      quality={90}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors">
-                    네이버 지도
-                  </span>
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/naver.png"
+                    alt="네이버 지도"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-sub-body-sb text-gray-700">네이버 지도</p>
               </a>
             )}
 
@@ -384,23 +411,41 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 href={ensureHttps(storeData.kakaoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl overflow-hidden relative">
-                    <Image
-                      src="/kakaomap.png"
-                      alt="Kakao Map"
-                      width={144}
-                      height={144}
-                      quality={90}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors">
-                    카카오맵
-                  </span>
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/kakaomap.png"
+                    alt="카카오맵"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-sub-body-sb text-gray-700">카카오맵</p>
+              </a>
+            )}
+
+            {/* Google Maps Link */}
+            {storeData.googleMapsLink && (
+              <a
+                href={ensureHttps(storeData.googleMapsLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
+              >
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/googlemaps.png"
+                    alt="구글맵"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-sub-body-sb text-gray-700">구글맵</p>
               </a>
             )}
           </div>
@@ -411,7 +456,8 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       {/* Order Section */}
       {(storeData.yogiyoLink ||
         storeData.baeminLink ||
-        storeData.coupangEatsLink) && (
+        storeData.coupangEatsLink ||
+        storeData.ddangyoLink) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-700 mb-2">
             바로 주문하러 가기
@@ -481,6 +527,28 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                   />
                 </div>
                 <p className="text-sub-body-sb text-gray-700">요기요</p>
+              </a>
+            )}
+
+            {/* 땡겨요 */}
+            {storeData.ddangyoLink && (
+              <a
+                href={ensureHttps(storeData.ddangyoLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
+              >
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/ddangyo.png"
+                    alt="땡겨요"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-sub-body-sb text-gray-700">땡겨요</p>
               </a>
             )}
           </div>

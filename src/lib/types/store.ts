@@ -29,13 +29,18 @@ export interface StoreResponse {
   baeminLink?: string;
   yogiyoLink?: string;
   coupangEatsLink?: string;
+  ddangyoLink?: string;
   naverLink?: string;
   kakaoLink?: string;
+  googleMapsLink?: string;
   instagramLink?: string;
   kakaoTalkLink?: string;
+  daangnLink?: string;
   siteLink: string;
   description?: string;
   thumbnailUrl?: string;
+  menuCount?: number;
+  requiredStampsForCoupon?: number;
 }
 
 // 음식 정보

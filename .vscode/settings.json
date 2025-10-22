@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "**/templates/*.tsx": "typescriptreact",
+    "**/templates/*.ts": "typescript"
+  }
+}

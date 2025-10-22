@@ -41,6 +41,7 @@ export interface StoreResponse {
   thumbnailUrl?: string;
   menuCount?: number;
   requiredStampsForCoupon?: number;
+  displayTemplate?: number;
 }
 
 // 음식 정보

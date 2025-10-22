@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { StoreClient } from "./store-client";
+import Template1 from "./templates/template1";
+import Template2 from "./templates/template2";
 import {
   fetchStoreIdBySiteLink,
   fetchStore,
@@ -150,6 +151,9 @@ export default async function StorePage({ params }: StorePageProps) {
         siteLink: siteLink,
         description: undefined,
         thumbnailUrl: undefined,
+        displayTemplate: 1,
+        menuCount: 0,
+        requiredStampsForCoupon: 10,
       };
     }
 
@@ -194,6 +198,14 @@ export default async function StorePage({ params }: StorePageProps) {
       servesCuisine: "Korean",
     };
 
+    // 템플릿 선택 (displayTemplate 값에 따라 동적으로 선택)
+    const templateMap = {
+      1: Template1,
+      2: Template2,
+    } as const;
+
+    const TemplateComponent = templateMap[storeData.displayTemplate as 1 | 2] || Template1;
+
     return (
       <>
         <script
@@ -202,7 +214,7 @@ export default async function StorePage({ params }: StorePageProps) {
             __html: JSON.stringify(structuredData),
           }}
         />
-        <StoreClient
+        <TemplateComponent
           storeId={storeId}
           storeData={storeData}
           foodsData={foodsData}

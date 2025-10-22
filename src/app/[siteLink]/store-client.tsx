@@ -230,16 +230,16 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
 
       {/* Store Info */}
       <div className="p-4 flex flex-col items-center text-center">
-        <h1 className="text-title-1 text-gray-800 mb-2">
+        <h1 className="text-title-1 text-gray-600 mb-2">
           {storeData.storeName}
         </h1>
         {storeData.description && (
-          <p className="text-sub-body-r text-gray-600 max-w-md">
+          <p className="text-sub-body-r text-gray-500 max-w-md">
             {storeData.description}
           </p>
         )}
         {storeData.address && (
-          <p className="text-sub-body-r text-gray-500 mt-2">
+          <p className="text-sub-body-r text-gray-400 mt-2">
             📍 {storeData.address}
           </p>
         )}
@@ -248,7 +248,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
         <div ref={shareMenuRef} className="relative mt-4 w-full max-w-sm">
           <button
             onClick={() => setShowShareMenu(!showShareMenu)}
-            className="w-full px-4 py-3 bg-white border-2 border-gray-800 text-gray-800 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-300 text-gray-600 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
           >
             {copySuccess ? "✓ 복사 완료!" : "공유하기"}
           </button>
@@ -258,13 +258,13 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             <div className="absolute top-full mt-2 w-full bg-white border-2 border-gray-800 rounded-2xl shadow-lg overflow-hidden z-10">
               <button
                 onClick={handleCopyUrl}
-                className="w-full px-4 py-3 text-body-sb text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 text-body-sb text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
               >
                 URL 복사
               </button>
               <button
                 onClick={handleShowQr}
-                className="w-full px-4 py-3 text-body-sb text-gray-800 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
+                className="w-full px-4 py-3 text-body-sb text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
               >
                 QR 코드 보기
               </button>
@@ -276,12 +276,12 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
         <div className="w-full max-w-sm mt-2">
           <button
             onClick={handleCouponClick}
-            className="w-full px-4 py-3 bg-white border-2 border-gray-800 text-gray-800 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
+            className="w-full px-4 py-3 bg-white border-2 border-gray-300 text-gray-600 rounded-3xl hover:bg-gray-800 hover:text-white transition-all text-body-sb shadow-sm"
           >
             쿠폰 적립/사용
           </button>
           {storeData.requiredStampsForCoupon && (
-            <p className="text-sub-body-r text-gray-500 text-center mt-2">
+            <p className="text-sub-body-r text-gray-400 text-center mt-2">
               🎫 스탬프 {storeData.requiredStampsForCoupon}개로 쿠폰 사용 가능
             </p>
           )}
@@ -291,14 +291,14 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       {/* SNS Section */}
       {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-800 mb-2">SNS</h3>
+          <h3 className="text-sub-title-b text-gray-500 mb-2">SNS</h3>
           <div className="grid grid-cols-2 gap-2">
             {storeData.instagramLink && (
               <a
                 href={formatInstagramLink(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -313,7 +313,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                       />
                     </div>
                     <span
-                      className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate"
+                      className="text-sub-body-sb text-gray-500 group-hover:text-chefriend transition-colors truncate"
                       title={storeData.instagramLink || undefined}
                     >
                       {storeData.instagramLink}
@@ -327,7 +327,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -341,7 +341,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate">
+                    <span className="text-sub-body-sb text-gray-500 transition-colors truncate">
                       카카오톡 채널
                     </span>
                   </div>
@@ -353,7 +353,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 href={ensureHttps(storeData.daangnLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl hover:border-gray-800 hover:shadow-md transition-all group"
+                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -367,7 +367,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <span className="text-sub-body-sb text-gray-800 group-hover:text-chefriend transition-colors truncate">
+                    <span className="text-sub-body-sb text-gray-500 group-hover:text-chefriend transition-colors truncate">
                       당근
                     </span>
                   </div>
@@ -381,7 +381,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       {/* Map Links Section */}
       {(storeData.naverLink || storeData.kakaoLink || storeData.googleMapsLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-700 mb-2">지도</h3>
+          <h3 className="text-sub-title-b text-gray-500 mb-2">지도</h3>
           <div className="flex gap-3 justify-start">
             {/* Naver Map Link */}
             {storeData.naverLink && (
@@ -401,7 +401,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">네이버 지도</p>
+                <p className="text-sub-body-sb text-gray-500">네이버 지도</p>
               </a>
             )}
 
@@ -423,7 +423,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">카카오맵</p>
+                <p className="text-sub-body-sb text-gray-500">카카오맵</p>
               </a>
             )}
 
@@ -445,7 +445,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">구글맵</p>
+                <p className="text-sub-body-sb text-gray-500">구글맵</p>
               </a>
             )}
           </div>
@@ -459,7 +459,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
         storeData.coupangEatsLink ||
         storeData.ddangyoLink) && (
         <div className="px-6 mb-4">
-          <h3 className="text-sub-title-b text-gray-700 mb-2">
+          <h3 className="text-sub-title-b text-gray-500 mb-2">
             바로 주문하러 가기
           </h3>
           {/* Delivery Apps Grid */}
@@ -482,7 +482,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">배달의민족</p>
+                <p className="text-sub-body-sb text-gray-500">배달의민족</p>
               </a>
             )}
 
@@ -504,7 +504,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">쿠팡이츠</p>
+                <p className="text-sub-body-sb text-gray-500">쿠팡이츠</p>
               </a>
             )}
 
@@ -526,7 +526,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">요기요</p>
+                <p className="text-sub-body-sb text-gray-500">요기요</p>
               </a>
             )}
 
@@ -548,7 +548,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sub-body-sb text-gray-700">땡겨요</p>
+                <p className="text-sub-body-sb text-gray-500">땡겨요</p>
               </a>
             )}
           </div>
@@ -559,7 +559,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       {foodsData.length > 0 && (
         <div className="px-6 pb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sub-title-b text-gray-800">메뉴</h2>
+            <h2 className="text-sub-title-b text-gray-500">메뉴</h2>
             {foodsData.length > 0 && <p className="text-sub-body-sb text-chefriend">
               메뉴 {foodsData.length}개
             </p>}
@@ -583,11 +583,11 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                       className="rounded-lg object-cover w-24 h-24"
                     />
                     <div className="flex-1">
-                      <h3 className="text-headline-b text-gray-800">
+                      <h3 className="text-headline-b text-gray-500">
                         {food.foodName}
                       </h3>
                       {food.description && (
-                        <p className="text-sub-body-r text-gray-600 mt-1">
+                        <p className="text-sub-body-r text-gray-400 mt-1">
                           {food.description}
                         </p>
                       )}
@@ -599,7 +599,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 ) : (
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-headline-b text-gray-800">
+                      <h3 className="text-headline-b text-gray-500">
                         {food.foodName}
                       </h3>
                       <p className="text-body-sb text-chefriend">
@@ -607,7 +607,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                       </p>
                     </div>
                     {food.description && (
-                      <p className="text-sub-body-r text-gray-600 mt-1">
+                      <p className="text-sub-body-r text-gray-400 mt-1">
                         {food.description}
                       </p>
                     )}
@@ -641,7 +641,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             {/* Close Button */}
             <button
               onClick={() => setShowQrModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-800 transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-300 hover:text-gray-700 transition-colors"
             >
               <svg
                 className="w-6 h-6"
@@ -659,7 +659,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             </button>
 
             {/* Modal Title */}
-            <h3 className="text-sub-title-b text-gray-800 text-center mb-6">
+            <h3 className="text-sub-title-b text-gray-500 text-center mb-6">
               QR 코드
             </h3>
 

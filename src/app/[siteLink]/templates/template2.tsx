@@ -1,26 +1,422 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
+import { QRCodeCanvas } from "qrcode.react";
+import { CouponPhoneSheet } from "@/components/coupon/CouponPhoneSheet";
 import type { TemplateProps } from "./types";
+import { FaInstagram, FaCarrot } from "react-icons/fa";
+import { SiDoordash, SiUbereats, SiGrubhub, SiGooglemaps, SiKakaotalk, SiNaver } from "react-icons/si";
+import { IoRestaurantOutline } from "react-icons/io5";
+import { PiMapPinFill } from "react-icons/pi"
 
 export default function Template2({ storeId, storeData, foodsData }: TemplateProps) {
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [showCouponSheet, setShowCouponSheet] = useState(false);
+  const qrRef = useRef<HTMLDivElement>(null);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // 외부 클릭 감지로 공유 메뉴 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (
+        shareMenuRef.current &&
+        !shareMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowShareMenu(false);
+      }
+    };
+
+    if (showShareMenu) {
+      setTimeout(() => {
+        document.addEventListener("click", handleClickOutside);
+        document.addEventListener("touchend", handleClickOutside);
+      }, 0);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("touchend", handleClickOutside);
+    };
+  }, [showShareMenu]);
+
+  // URL에 https://가 없으면 추가하는 함수
+  const ensureHttps = (url: string | null | undefined): string | undefined => {
+    if (!url) return undefined;
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return undefined;
+    if (/^https?:\/\//i.test(trimmedUrl)) {
+      return trimmedUrl;
+    }
+    return `https://${trimmedUrl}`;
+  };
+
+  // Instagram 링크를 올바른 형식으로 변환하는 함수
+  const formatInstagramLink = (
+    link: string | null | undefined
+  ): string | undefined => {
+    if (!link) return undefined;
+    const trimmed = link.trim();
+    if (!trimmed) return undefined;
+    if (/instagram\.com/i.test(trimmed)) {
+      return ensureHttps(trimmed);
+    }
+    const username = trimmed.startsWith("@") ? trimmed.slice(1) : trimmed;
+    return `https://instagram.com/${username}`;
+  };
+
+  const handleCopyUrl = async () => {
+    try {
+      const decodedUrl = decodeURIComponent(window.location.href).replace(
+        /^https?:\/\/(www\.)?/,
+        ""
+      );
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(decodedUrl);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = decodedUrl;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand("copy");
+        } catch (fallbackErr) {
+          console.error("Fallback copy failed:", fallbackErr);
+          alert("URL 복사에 실패했습니다.");
+          return;
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+
+      setCopySuccess(true);
+      setShowShareMenu(false);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy URL:", err);
+      alert("URL 복사에 실패했습니다.");
+    }
+  };
+
+  const handleShowQr = () => {
+    setShowQrModal(true);
+    setShowShareMenu(false);
+  };
+
+  const handleDownloadQr = () => {
+    try {
+      if (!qrRef.current) return;
+      const canvas = qrRef.current.querySelector("canvas");
+      if (!canvas) {
+        alert("QR 코드를 찾을 수 없습니다.");
+        return;
+      }
+      const url = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${storeData.storeName}-qr.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.error("Failed to download QR code:", err);
+      alert("QR 코드 다운로드에 실패했습니다.");
+    }
+  };
+
+  const handleCouponClick = () => {
+    setShowCouponSheet(true);
+  };
+
   return (
-    <div className="bg-white w-full mx-auto min-h-screen max-w-[430px] flex items-center justify-center">
-      <div className="text-center p-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">
-          템플릿 2
-        </h1>
-        <p className="text-gray-600 mb-2">
-          {storeData.storeName}
-        </p>
-        <p className="text-sm text-gray-400">
-          피그마 디자인 작업 후 여기에 적용 예정
-        </p>
-        <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-          <p className="text-xs text-gray-500">
-            storeId: {storeId} | 메뉴 {foodsData.length}개
+    <div className="bg-white w-full mx-auto min-h-screen max-w-[430px]">
+      {/* Header Section */}
+      <div className="px-6 pt-6 pb-4">
+        {/* Store Icon & Tagline */}
+        <div className="text-center mb-6">
+          <div className="flex justify-center mb-3">
+            <div className="w-8 h-8 bg-[#7790AC] rounded-lg flex items-center justify-center">
+              <IoRestaurantOutline className="w-5 h-5 text-white" />
+            </div>
+          </div>
+          <p className="text-lg text-gray-600">
+            Your daily dose of delicious, delivered.
           </p>
         </div>
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-2 mb-6">
+          {/* Share Button */}
+          <div ref={shareMenuRef} className="relative">
+            <button
+              onClick={() => setShowShareMenu(!showShareMenu)}
+              className="w-full px-4 py-2.5 bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-all text-sm font-medium"
+            >
+              {copySuccess ? "✓ 복사 완료!" : "공유하기"}
+            </button>
+
+            {/* Dropdown Menu */}
+            {showShareMenu && (
+              <div className="absolute top-full mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden z-10">
+                <button
+                  onClick={handleCopyUrl}
+                  className="w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  URL 복사
+                </button>
+                <button
+                  onClick={handleShowQr}
+                  className="w-full px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2 border-t border-gray-200"
+                >
+                  QR 코드 보기
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Coupon Button */}
+          <button
+            onClick={handleCouponClick}
+            className="w-full px-4 py-2.5 bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-all text-sm font-medium"
+          >
+            쿠폰 적립/사용
+          </button>
+        </div>
+
+        {/* Connect with Us Section */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+            Connect with Us
+          </h2>
+          <div className="space-y-2">
+            {storeData.baeminLink && (
+              <a
+                href={ensureHttps(storeData.baeminLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
+              >
+                <span className="font-medium text-base">Order with 배달의 민족</span>
+              </a>
+            )}
+            {storeData.coupangEatsLink && (
+              <a
+                href={ensureHttps(storeData.coupangEatsLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
+              >
+                <span className="font-medium text-base">Order with 쿠팡 이츠</span>
+              </a>
+            )}
+            {storeData.yogiyoLink && (
+              <a
+                href={ensureHttps(storeData.yogiyoLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
+              >
+                <span className="font-medium text-base">Order with 요기요</span>
+              </a>
+            )}
+            {storeData.ddangyoLink && (
+              <a
+                href={ensureHttps(storeData.ddangyoLink)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
+              >
+                <SiGrubhub className="w-5 h-5" />
+                <span className="font-medium text-base">Order with 땡겨요</span>
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Find Our Location Section */}
+        {(storeData.googleMapsLink || storeData.naverLink || storeData.kakaoLink) && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+              Find Our Location
+            </h2>
+            <div className="space-y-2">
+              {storeData.googleMapsLink && (
+                <a
+                  href={ensureHttps(storeData.googleMapsLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <SiGooglemaps className="w-5 h-5" />
+                  <span className="font-medium text-base">Find on 구글 지도</span>
+                </a>
+              )}
+              {(storeData.kakaoLink) && (
+                <a
+                  href={ensureHttps(storeData.kakaoLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <PiMapPinFill  className="w-5 h-5" />
+                  <span className="font-medium text-base">Find on 카카오 지도</span>
+                </a>
+              )}
+              {(storeData.naverLink || storeData.kakaoLink) && (
+                <a
+                  href={ensureHttps(storeData.naverLink || storeData.kakaoLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <SiNaver className="w-5 h-5" />
+                  <span className="font-medium text-base">Find on 네이버 지도</span>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Follow Us Section */}
+        {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+              Follow Us
+            </h2>
+            <div className="space-y-2">
+              {storeData.instagramLink && (
+                <a
+                  href={formatInstagramLink(storeData.instagramLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <FaInstagram className="w-5 h-5" />
+                  <span className="font-medium text-base">Instagram</span>
+                </a>
+              )}
+              {storeData.kakaoTalkLink && (
+                <a
+                  href={ensureHttps(storeData.kakaoTalkLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <SiKakaotalk className="w-5 h-5" />
+                  <span className="font-medium text-base">KakaoTalk</span>
+                </a>
+              )}
+              {storeData.daangnLink && (
+                <a
+                  href={ensureHttps(storeData.daangnLink)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <FaCarrot className="w-5 h-5" />
+                  <span className="font-medium text-base">당근</span>
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Our Menu Section */}
+        {foodsData.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+              Our Menu
+            </h2>
+
+            <div className="space-y-3">
+              {foodsData.map((food) => (
+                <div key={food.foodItemId} className="flex justify-between items-start border-b border-gray-100 pb-3 last:border-b-0 last:pb-0">
+                  <div className="flex-1">
+                    <p className="text-base font-medium text-gray-800">{food.foodName}</p>
+                    {food.description && (
+                      <p className="text-xs text-gray-500 mt-0.5">{food.description}</p>
+                    )}
+                  </div>
+                  <p className="text-[16px] font-medium text-[#7A8750] ml-4">
+                  ₩ {food.price.toLocaleString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* QR Code Modal */}
+      {showQrModal && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setShowQrModal(false)}
+        >
+          <div
+            className="bg-white rounded-3xl p-6 max-w-sm w-full relative shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-gray-300 hover:text-gray-700 transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <h3 className="text-sub-title-b text-gray-500 text-center mb-6">
+              QR 코드
+            </h3>
+
+            <div
+              ref={qrRef}
+              className="flex justify-center items-center bg-white p-6 rounded-2xl mb-6"
+            >
+              <QRCodeCanvas
+                value={typeof window !== "undefined" ? window.location.href : ""}
+                size={240}
+                level="H"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                onClick={handleDownloadQr}
+                className="px-4 py-3 bg-gray-800 text-white rounded-full hover:bg-gray-700 transition-all text-body-sb flex items-center justify-center gap-2"
+              >
+                다운로드
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Coupon Phone Sheet */}
+      <CouponPhoneSheet
+        open={showCouponSheet}
+        onClose={() => setShowCouponSheet(false)}
+        siteLink={storeData.siteLink}
+        storeId={storeId}
+      />
     </div>
   );
 }

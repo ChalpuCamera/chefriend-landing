@@ -281,34 +281,29 @@ export default function Template1({ storeId, storeData, foodsData }: TemplatePro
       {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-500 mb-2">SNS</h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex gap-3 justify-start">
             {storeData.instagramLink && (
               <a
                 href={formatInstagramLink(storeData.instagramLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
-                      <Image
-                        src="/instagram.png"
-                        alt="Instagram"
-                        width={144}
-                        height={144}
-                        quality={90}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span
-                      className="text-sub-body-sb text-gray-500 group-hover:text-chefriend transition-colors truncate"
-                      title={storeData.instagramLink || undefined}
-                    >
-                      {storeData.instagramLink}
-                    </span>
-                  </div>
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/instagram.png"
+                    alt="Instagram"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-sub-body-sb text-gray-500">
+                  {storeData.instagramLink.startsWith('@')
+                    ? storeData.instagramLink
+                    : `@${storeData.instagramLink}`}
+                </p>
               </a>
             )}
             {storeData.kakaoTalkLink && (
@@ -316,25 +311,19 @@ export default function Template1({ storeId, storeData, foodsData }: TemplatePro
                 href={ensureHttps(storeData.kakaoTalkLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
-                      <Image
-                        src="/kakaotalk.png"
-                        alt="카카오톡"
-                        width={144}
-                        height={144}
-                        quality={90}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sub-body-sb text-gray-500 transition-colors truncate">
-                      카카오톡 채널
-                    </span>
-                  </div>
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/kakaotalk.png"
+                    alt="카카오톡"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-sub-body-sb text-gray-500">카카오톡</p>
               </a>
             )}
             {storeData.daangnLink && (
@@ -342,25 +331,19 @@ export default function Template1({ storeId, storeData, foodsData }: TemplatePro
                 href={ensureHttps(storeData.daangnLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
+                className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <div className="w-8 h-8 rounded-xl overflow-hidden relative flex-shrink-0">
-                      <Image
-                        src="/daangn.png"
-                        alt="당근"
-                        width={144}
-                        height={144}
-                        quality={90}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <span className="text-sub-body-sb text-gray-500 group-hover:text-chefriend transition-colors truncate">
-                      당근
-                    </span>
-                  </div>
+                <div className="w-12 overflow-hidden mb-2">
+                  <Image
+                    src="/daangn.png"
+                    alt="당근"
+                    width={200}
+                    height={200}
+                    quality={90}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <p className="text-sub-body-sb text-gray-500">당근</p>
               </a>
             )}
           </div>

@@ -26,7 +26,7 @@ export async function generateMetadata({
 
     if (!storeId) {
       return {
-        title: "가게를 찾을 수 없습니다 - 셰프렌드",
+        title: "가게를 찾을 수 없습니다",
         description: "요청하신 가게를 찾을 수 없습니다.",
       };
     }
@@ -36,7 +36,7 @@ export async function generateMetadata({
     const store = storeResponse?.result;
 
     if (store) {
-      const title = `${store.storeName} - 셰프렌드`;
+      const title = store.storeName;
       const description =
         store.description || `${store.storeName}의 메뉴를 확인하고 주문하세요.`;
       const imageUrl = store.thumbnailUrl || "/landing1.png";
@@ -90,7 +90,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${siteLink} - 셰프렌드`,
+    title: siteLink,
     description: "맛있는 메뉴를 확인하세요.",
     alternates: {
       canonical: `/${siteLink}`,

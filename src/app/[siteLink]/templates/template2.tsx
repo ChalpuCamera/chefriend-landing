@@ -142,12 +142,15 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         {/* Store Icon & Tagline */}
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3">
-            <div className="w-8 h-8 bg-[#7790AC] rounded-lg flex items-center justify-center">
-              <IoRestaurantOutline className="w-5 h-5 text-white" />
+            <div className="flex gap-4">
+              <div className="w-8 h-8 bg-[#7790AC] rounded-lg flex items-center justify-center">
+                <IoRestaurantOutline className="w-5 h-5 text-white" />
+              </div>
+              <p className="text-lg text-gray-600 font-medium">{storeData.storeName}</p>
             </div>
           </div>
-          <p className="text-lg text-gray-600">
-            Your daily dose of delicious, delivered.
+          <p className="text-sub-body-r text-gray-500">
+            {storeData.description}
           </p>
         </div>
 
@@ -193,7 +196,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         {/* Connect with Us Section */}
         <div className="mb-6">
           <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-            Connect with Us
+            주문하러 가기
           </h2>
           <div className="space-y-2">
             {storeData.baeminLink && (
@@ -203,7 +206,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
               >
-                <span className="font-medium text-base">Order with 배달의 민족</span>
+                <span className="font-medium text-base">배달의 민족</span>
               </a>
             )}
             {storeData.coupangEatsLink && (
@@ -213,7 +216,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
               >
-                <span className="font-medium text-base">Order with 쿠팡 이츠</span>
+                <span className="font-medium text-base">쿠팡 이츠</span>
               </a>
             )}
             {storeData.yogiyoLink && (
@@ -223,7 +226,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
               >
-                <span className="font-medium text-base">Order with 요기요</span>
+                <span className="font-medium text-base">요기요</span>
               </a>
             )}
             {storeData.ddangyoLink && (
@@ -231,10 +234,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 href={ensureHttps(storeData.ddangyoLink)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
+                className="flex items-center  justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
               >
-                <SiGrubhub className="w-5 h-5" />
-                <span className="font-medium text-base">Order with 땡겨요</span>
+                <span className="font-medium text-base">땡겨요</span>
               </a>
             )}
           </div>
@@ -244,7 +246,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         {(storeData.googleMapsLink || storeData.naverLink || storeData.kakaoLink) && (
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-              Find Our Location
+              지도 
             </h2>
             <div className="space-y-2">
               {storeData.googleMapsLink && (
@@ -255,7 +257,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <SiGooglemaps className="w-5 h-5" />
-                  <span className="font-medium text-base">Find on 구글 지도</span>
+                  <span className="font-medium text-base">구글 지도</span>
                 </a>
               )}
               {(storeData.kakaoLink) && (
@@ -266,7 +268,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <PiMapPinFill  className="w-5 h-5" />
-                  <span className="font-medium text-base">Find on 카카오 지도</span>
+                  <span className="font-medium text-base">카카오 지도</span>
                 </a>
               )}
               {(storeData.naverLink || storeData.kakaoLink) && (
@@ -277,7 +279,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <SiNaver className="w-5 h-5" />
-                  <span className="font-medium text-base">Find on 네이버 지도</span>
+                  <span className="font-medium text-base">네이버 지도</span>
                 </a>
               )}
             </div>
@@ -288,7 +290,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-              Follow Us
+              SNS
             </h2>
             <div className="space-y-2">
               {storeData.instagramLink && (
@@ -299,7 +301,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <FaInstagram className="w-5 h-5" />
-                  <span className="font-medium text-base">Instagram</span>
+                  <span className="font-medium text-base">인스타그램</span>
                 </a>
               )}
               {storeData.kakaoTalkLink && (
@@ -310,7 +312,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   <SiKakaotalk className="w-5 h-5" />
-                  <span className="font-medium text-base">KakaoTalk</span>
+                  <span className="font-medium text-base">카카오 채널</span>
                 </a>
               )}
               {storeData.daangnLink && (
@@ -332,7 +334,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         {foodsData.length > 0 && (
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-              Our Menu
+              메뉴
             </h2>
 
             <div className="space-y-3">

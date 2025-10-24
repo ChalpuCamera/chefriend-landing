@@ -96,6 +96,10 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
   function handlePinModalClose() {
     setShowPinModal(false)
     setPinData(null)
+  }
+
+  function handlePinUsed() {
+    // Refresh membership data when PIN is used
     fetchMembership()
   }
 
@@ -180,12 +184,15 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
       </div>
 
       {/* PIN Modal */}
-      {showPinModal && pinData && (
+      {showPinModal && pinData && storeId && phone && (
         <CouponEarnPinModal
           open={showPinModal}
           onClose={handlePinModalClose}
           pin={pinData.pin}
           expiredAt={pinData.expiredAt}
+          storeId={storeId}
+          phone={phone}
+          onPinUsed={handlePinUsed}
         />
       )}
     </div>

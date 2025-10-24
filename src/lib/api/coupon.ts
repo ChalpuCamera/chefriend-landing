@@ -17,6 +17,10 @@ interface CouponRedeemResponse {
   currentStamps: number;
 }
 
+interface PinStatusResponse {
+  isUsed: boolean;
+}
+
 interface StoreIdResponse {
   storeId: number;
 }
@@ -113,5 +117,28 @@ export async function redeemCoupon(
   }
 
   const data: ApiResponse<CouponRedeemResponse> = await response.json();
+  return data.result;
+}
+
+// Check PIN status (whether it has been used)
+export async function checkPinStatus(
+  storeId: number,
+  phone: string,
+  pin: string
+): Promise<PinStatusResponse> {
+  const url = `${API_BASE_URL}/api/coupon/pin-status?storeId=${storeId}&phone=${encodeURIComponent(phone)}&pin=${encodeURIComponent(pin)}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("PIN 상태 확인에 실패했습니다");
+  }
+
+  const data: ApiResponse<PinStatusResponse> = await response.json();
   return data.result;
 }

@@ -46,9 +46,6 @@ export function CouponPhoneSheet({ open, onClose, siteLink, storeId }: CouponPho
       return
     }
 
-    // localStorage에 저장
-    localStorage.setItem(`coupon_phone_${siteLink}`, phone)
-
     // 쿠폰 페이지로 이동
     router.push(`/${siteLink}/coupon?phone=${encodeURIComponent(phone)}`)
     onClose()

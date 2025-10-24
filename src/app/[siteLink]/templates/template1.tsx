@@ -198,12 +198,7 @@ export default function Template1({ storeId, storeData, foodsData }: TemplatePro
   };
 
   const handleCouponClick = () => {
-    const savedPhone = localStorage.getItem(`coupon_phone_${storeData.siteLink}`);
-    if (savedPhone) {
-      router.push(`/${storeData.siteLink}/coupon?phone=${encodeURIComponent(savedPhone)}`);
-    } else {
-      setShowCouponSheet(true);
-    }
+    setShowCouponSheet(true);
   };
 
   return (

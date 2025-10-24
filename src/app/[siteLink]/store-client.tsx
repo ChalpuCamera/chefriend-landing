@@ -204,12 +204,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
   };
 
   const handleCouponClick = () => {
-    const savedPhone = localStorage.getItem(`coupon_phone_${storeData.siteLink}`);
-    if (savedPhone) {
-      router.push(`/${storeData.siteLink}/coupon?phone=${encodeURIComponent(savedPhone)}`);
-    } else {
-      setShowCouponSheet(true);
-    }
+    setShowCouponSheet(true);
   };
 
   return (

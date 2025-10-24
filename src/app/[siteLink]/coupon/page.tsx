@@ -140,7 +140,7 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <button
-          onClick={() => router.push(`/${siteLink}`)}
+          onClick={() => router.back()}
           className="w-10 h-10 flex items-center justify-center text-gray-600 hover:text-gray-900 transition-colors"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

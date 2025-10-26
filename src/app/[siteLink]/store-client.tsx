@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import type { StoreResponse, FoodItemResponse } from "@/lib/types/store";
+import type { StoreResponse, FoodItemResponse, LinkType } from "@/lib/types/store";
 import { QRCodeCanvas } from "qrcode.react";
 import { CouponPhoneSheet } from "@/components/coupon/CouponPhoneSheet";
 
@@ -14,14 +13,18 @@ interface StoreClientProps {
 }
 
 export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps) {
-  const router = useRouter();
   const [copySuccess, setCopySuccess] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
   const [showCouponSheet, setShowCouponSheet] = useState(false);
-  const [qrCopySuccess, setQrCopySuccess] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // Helper function to get link URL by type
+  const getLinkUrl = (linkType: LinkType): string | undefined => {
+    const link = storeData.links?.find(l => l.linkType === linkType);
+    return link?.url;
+  };
 
   // 외부 클릭 감지로 공유 메뉴 닫기
   useEffect(() => {
@@ -161,8 +164,8 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
         new ClipboardItem({ "image/png": blob }),
       ]);
 
-      setQrCopySuccess(true);
-      setTimeout(() => setQrCopySuccess(false), 2000);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
       console.error("Failed to copy QR code:", err);
 
@@ -284,13 +287,13 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       </div>
 
       {/* SNS Section */}
-      {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
+      {(getLinkUrl("INSTAGRAM") || getLinkUrl("KAKAO_TALK") || getLinkUrl("DAANGN")) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-500 mb-2">SNS</h3>
           <div className="grid grid-cols-2 gap-2">
-            {storeData.instagramLink && (
+            {getLinkUrl("INSTAGRAM") && (
               <a
-                href={formatInstagramLink(storeData.instagramLink)}
+                href={formatInstagramLink(getLinkUrl("INSTAGRAM"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
@@ -309,17 +312,17 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                     </div>
                     <span
                       className="text-sub-body-sb text-gray-500 group-hover:text-chefriend transition-colors truncate"
-                      title={storeData.instagramLink || undefined}
+                      title={getLinkUrl("INSTAGRAM") || undefined}
                     >
-                      {storeData.instagramLink}
+                      {getLinkUrl("INSTAGRAM")}
                     </span>
                   </div>
                 </div>
               </a>
             )}
-            {storeData.kakaoTalkLink && (
+            {getLinkUrl("KAKAO_TALK") && (
               <a
-                href={ensureHttps(storeData.kakaoTalkLink)}
+                href={ensureHttps(getLinkUrl("KAKAO_TALK"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
@@ -343,9 +346,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
                 </div>
               </a>
             )}
-            {storeData.daangnLink && (
+            {getLinkUrl("DAANGN") && (
               <a
-                href={ensureHttps(storeData.daangnLink)}
+                href={ensureHttps(getLinkUrl("DAANGN"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full p-3 bg-white border-2 border-gray-100 rounded-2xl transition-all group"
@@ -374,14 +377,14 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       )}
 
       {/* Map Links Section */}
-      {(storeData.naverLink || storeData.kakaoLink || storeData.googleMapsLink) && (
+      {(getLinkUrl("NAVER_MAP") || getLinkUrl("KAKAO_MAP") || getLinkUrl("GOOGLE_MAPS")) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-500 mb-2">지도</h3>
           <div className="flex gap-3 justify-start">
             {/* Naver Map Link */}
-            {storeData.naverLink && (
+            {getLinkUrl("NAVER_MAP") && (
               <a
-                href={ensureHttps(storeData.naverLink)}
+                href={ensureHttps(getLinkUrl("NAVER_MAP"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -401,9 +404,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             )}
 
             {/* Kakao Map Link */}
-            {storeData.kakaoLink && (
+            {getLinkUrl("KAKAO_MAP") && (
               <a
-                href={ensureHttps(storeData.kakaoLink)}
+                href={ensureHttps(getLinkUrl("KAKAO_MAP"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -423,9 +426,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             )}
 
             {/* Google Maps Link */}
-            {storeData.googleMapsLink && (
+            {getLinkUrl("GOOGLE_MAPS") && (
               <a
-                href={ensureHttps(storeData.googleMapsLink)}
+                href={ensureHttps(getLinkUrl("GOOGLE_MAPS"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -449,10 +452,10 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
 
       {/* Delivery Links */}
       {/* Order Section */}
-      {(storeData.yogiyoLink ||
-        storeData.baeminLink ||
-        storeData.coupangEatsLink ||
-        storeData.ddangyoLink) && (
+      {(getLinkUrl("YOGIYO") ||
+        getLinkUrl("BAEMIN") ||
+        getLinkUrl("COUPANGEATS") ||
+        getLinkUrl("DDANGYO")) && (
         <div className="px-6 mb-4">
           <h3 className="text-sub-title-b text-gray-500 mb-2">
             바로 주문하러 가기
@@ -460,9 +463,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
           {/* Delivery Apps Grid */}
           <div className="flex gap-3 justify-start">
             {/* 배달의민족 */}
-            {storeData.baeminLink && (
+            {getLinkUrl("BAEMIN") && (
               <a
-                href={ensureHttps(storeData.baeminLink)}
+                href={ensureHttps(getLinkUrl("BAEMIN"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -482,9 +485,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             )}
 
             {/* 쿠팡이츠 */}
-            {storeData.coupangEatsLink && (
+            {getLinkUrl("COUPANGEATS") && (
               <a
-                href={ensureHttps(storeData.coupangEatsLink)}
+                href={ensureHttps(getLinkUrl("COUPANGEATS"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -504,9 +507,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             )}
 
             {/* 요기요 */}
-            {storeData.yogiyoLink && (
+            {getLinkUrl("YOGIYO") && (
               <a
-                href={ensureHttps(storeData.yogiyoLink)}
+                href={ensureHttps(getLinkUrl("YOGIYO"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -526,9 +529,9 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
             )}
 
             {/* 땡겨요 */}
-            {storeData.ddangyoLink && (
+            {getLinkUrl("DDANGYO") && (
               <a
-                href={ensureHttps(storeData.ddangyoLink)}
+                href={ensureHttps(getLinkUrl("DDANGYO"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center flex-1 hover:opacity-80 transition-opacity"
@@ -693,7 +696,7 @@ export function StoreClient({ storeId, storeData, foodsData }: StoreClientProps)
       <CouponPhoneSheet
         open={showCouponSheet}
         onClose={() => setShowCouponSheet(false)}
-        siteLink={storeData.siteLink}
+        siteLink={storeData.siteLink || ""}
         storeId={storeId}
       />
     </div>

@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Template3 from "./templates/template3";
+import Template1 from "./templates/template1";
+import Template2 from "./templates/template2";
 import {
   fetchStoreIdBySiteLink,
   fetchStore,
@@ -110,16 +111,20 @@ export default async function StorePage({ params }: StorePageProps) {
       notFound();
     }
 
-    // 2. Store 정보 fetch
-    const storeResponse = await fetchStore(storeId);
-    const storeData = storeResponse?.result;
+    // 2. 기존 API로 데이터 fetch
+    let storeData = null;
+    let foodsData: FoodItemResponse[] = [];
 
-    if (!storeData) {
-      notFound();
+    // Store 정보 fetch
+    try {
+      const storeResponse = await fetchStore(storeId);
+      storeData = storeResponse?.result;
+      console.log(storeData);
+    } catch {
+      // Silently handle store fetch errors
     }
 
-    // 3. Foods 정보 fetch
-    let foodsData: FoodItemResponse[] = [];
+    // Foods 정보 fetch
     try {
       const foodsResponse = await fetchFoodsByStore(storeId, {
         page: 0,
@@ -128,6 +133,22 @@ export default async function StorePage({ params }: StorePageProps) {
       foodsData = foodsResponse?.result?.content || [];
     } catch {
       // Silently handle foods fetch errors
+    }
+
+    // Store 정보가 없으면 기본값 생성
+    if (!storeData) {
+      storeData = {
+        storeId: storeId,
+        storeName: "",
+        address: "",
+        siteLink: siteLink,
+        description: undefined,
+        thumbnailUrl: undefined,
+        displayTemplate: 1,
+        menuCount: 0,
+        requiredStampsForCoupon: 10,
+        links: [],
+      };
     }
 
     // Restaurant Schema for JSON-LD
@@ -171,6 +192,14 @@ export default async function StorePage({ params }: StorePageProps) {
       servesCuisine: "Korean",
     };
 
+    // 템플릿 선택 (displayTemplate 값에 따라 동적으로 선택)
+    const templateMap = {
+      1: Template1,
+      2: Template2,
+    } as const;
+
+    const TemplateComponent = templateMap[storeData.displayTemplate as 1 | 2] || Template1;
+
     return (
       <>
         <script
@@ -179,7 +208,7 @@ export default async function StorePage({ params }: StorePageProps) {
             __html: JSON.stringify(structuredData),
           }}
         />
-        <Template3
+        <TemplateComponent
           storeId={storeId}
           storeData={storeData}
           foodsData={foodsData}

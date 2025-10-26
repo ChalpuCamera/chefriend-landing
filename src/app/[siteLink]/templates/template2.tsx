@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { CouponPhoneSheet } from "@/components/coupon/CouponPhoneSheet";
+import type { LinkType } from "@/lib/types/store";
 import type { TemplateProps } from "./types";
 import { FaInstagram, FaCarrot } from "react-icons/fa";
 import { SiDoordash, SiUbereats, SiGrubhub, SiGooglemaps, SiKakaotalk, SiNaver } from "react-icons/si";
@@ -16,6 +17,12 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
   const [showCouponSheet, setShowCouponSheet] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // Helper function to get link URL by type
+  const getLinkUrl = (linkType: LinkType): string | undefined => {
+    const link = storeData.links?.find(l => l.linkType === linkType);
+    return link?.url;
+  };
 
   // 외부 클릭 감지로 공유 메뉴 닫기
   useEffect(() => {
@@ -199,9 +206,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
             주문하러 가기
           </h2>
           <div className="space-y-2">
-            {storeData.baeminLink && (
+            {getLinkUrl("BAEMIN") && (
               <a
-                href={ensureHttps(storeData.baeminLink)}
+                href={ensureHttps(getLinkUrl("BAEMIN"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
@@ -209,9 +216,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 <span className="font-medium text-base">배달의 민족</span>
               </a>
             )}
-            {storeData.coupangEatsLink && (
+            {getLinkUrl("COUPANGEATS") && (
               <a
-                href={ensureHttps(storeData.coupangEatsLink)}
+                href={ensureHttps(getLinkUrl("COUPANGEATS"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
@@ -219,9 +226,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 <span className="font-medium text-base">쿠팡 이츠</span>
               </a>
             )}
-            {storeData.yogiyoLink && (
+            {getLinkUrl("YOGIYO") && (
               <a
-                href={ensureHttps(storeData.yogiyoLink)}
+                href={ensureHttps(getLinkUrl("YOGIYO"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
@@ -229,9 +236,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                 <span className="font-medium text-base">요기요</span>
               </a>
             )}
-            {storeData.ddangyoLink && (
+            {getLinkUrl("DDANGYO") && (
               <a
-                href={ensureHttps(storeData.ddangyoLink)}
+                href={ensureHttps(getLinkUrl("DDANGYO"))}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center  justify-center gap-3 w-full px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:bg-[#6780a0] transition-colors"
@@ -243,15 +250,15 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         </div>
 
         {/* Find Our Location Section */}
-        {(storeData.googleMapsLink || storeData.naverLink || storeData.kakaoLink) && (
+        {(getLinkUrl("GOOGLE_MAPS") || getLinkUrl("NAVER_MAP") || getLinkUrl("KAKAO_MAP")) && (
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
               지도 
             </h2>
             <div className="space-y-2">
-              {storeData.googleMapsLink && (
+              {getLinkUrl("GOOGLE_MAPS") && (
                 <a
-                  href={ensureHttps(storeData.googleMapsLink)}
+                  href={ensureHttps(getLinkUrl("GOOGLE_MAPS"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -260,9 +267,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   <span className="font-medium text-base">구글 지도</span>
                 </a>
               )}
-              {(storeData.kakaoLink) && (
+              {(getLinkUrl("KAKAO_MAP")) && (
                 <a
-                  href={ensureHttps(storeData.kakaoLink)}
+                  href={ensureHttps(getLinkUrl("KAKAO_MAP"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -271,9 +278,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   <span className="font-medium text-base">카카오 지도</span>
                 </a>
               )}
-              {(storeData.naverLink || storeData.kakaoLink) && (
+              {(getLinkUrl("NAVER_MAP") || getLinkUrl("KAKAO_MAP")) && (
                 <a
-                  href={ensureHttps(storeData.naverLink || storeData.kakaoLink)}
+                  href={ensureHttps(getLinkUrl("NAVER_MAP") || getLinkUrl("KAKAO_MAP"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -287,15 +294,15 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
         )}
 
         {/* Follow Us Section */}
-        {(storeData.instagramLink || storeData.kakaoTalkLink || storeData.daangnLink) && (
+        {(getLinkUrl("INSTAGRAM") || getLinkUrl("KAKAO_TALK") || getLinkUrl("DAANGN")) && (
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
               SNS
             </h2>
             <div className="space-y-2">
-              {storeData.instagramLink && (
+              {getLinkUrl("INSTAGRAM") && (
                 <a
-                  href={formatInstagramLink(storeData.instagramLink)}
+                  href={formatInstagramLink(getLinkUrl("INSTAGRAM"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -304,9 +311,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   <span className="font-medium text-base">인스타그램</span>
                 </a>
               )}
-              {storeData.kakaoTalkLink && (
+              {getLinkUrl("KAKAO_TALK") && (
                 <a
-                  href={ensureHttps(storeData.kakaoTalkLink)}
+                  href={ensureHttps(getLinkUrl("KAKAO_TALK"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -315,9 +322,9 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
                   <span className="font-medium text-base">카카오 채널</span>
                 </a>
               )}
-              {storeData.daangnLink && (
+              {getLinkUrl("DAANGN") && (
                 <a
-                  href={ensureHttps(storeData.daangnLink)}
+                  href={ensureHttps(getLinkUrl("DAANGN"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 w-full px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
@@ -416,7 +423,7 @@ export default function Template2({ storeId, storeData, foodsData }: TemplatePro
       <CouponPhoneSheet
         open={showCouponSheet}
         onClose={() => setShowCouponSheet(false)}
-        siteLink={storeData.siteLink}
+        siteLink={storeData.siteLink || ""}
         storeId={storeId}
       />
     </div>

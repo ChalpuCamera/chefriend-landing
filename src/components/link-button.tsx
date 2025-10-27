@@ -38,7 +38,39 @@ interface LinkButtonProps {
 }
 
 export function LinkButton({ linkType, url, label, onClick, className = "" }: LinkButtonProps) {
-  const displayLabel = label || defaultLabels[linkType];
+  // Instagram의 경우 URL에서 아이디 추출
+  const getInstagramUsername = (instagramUrl: string): string => {
+    if (!instagramUrl) return "인스타그램";
+
+    // @username 형태인 경우
+    if (instagramUrl.startsWith("@")) {
+      return instagramUrl;
+    }
+
+    // URL 형태인 경우 username 추출
+    try {
+      const urlPatterns = [
+        /instagram\.com\/([^\/\?]+)/i,
+        /instagr\.am\/([^\/\?]+)/i,
+      ];
+
+      for (const pattern of urlPatterns) {
+        const match = instagramUrl.match(pattern);
+        if (match && match[1]) {
+          return `@${match[1]}`;
+        }
+      }
+    } catch (e) {
+      // URL 파싱 실패 시
+    }
+
+    // 패턴에 매칭되지 않으면 원본 반환 (@ 추가)
+    return instagramUrl.startsWith("@") ? instagramUrl : `@${instagramUrl}`;
+  };
+
+  const displayLabel = linkType === "INSTAGRAM"
+    ? (label || getInstagramUsername(url))
+    : (label || defaultLabels[linkType]);
 
   const handleClick = () => {
     if (onClick) {

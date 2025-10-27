@@ -4,14 +4,16 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { LinkButton } from "@/components/link-button";
 import { IoRestaurantOutline } from "react-icons/io5";
+import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
 import { Card, CardHeader } from "@/components/landing/ui/card";
 
-export default function Template3({ storeData }: TemplateProps) {
+export default function Template3({ storeData, foodsData }: TemplateProps) {
   const links = storeData.links || [];
   const [copySuccess, setCopySuccess] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
 
@@ -168,15 +170,17 @@ export default function Template3({ storeData }: TemplateProps) {
       {/* Links Section */}
       <div className="px-6 pb-6">
         <div className="flex flex-col gap-3">
-          {links.length > 0 ? (
-            links.map((link, index) => (
-              <LinkButton
-                key={index}
-                linkType={link.linkType}
-                url={link.url}
-                label={link.label || link.customLabel}
-              />
-            ))
+          {links.filter(link => link.isVisible !== false).length > 0 ? (
+            links
+              .filter(link => link.isVisible !== false)
+              .map((link, index) => (
+                <LinkButton
+                  key={index}
+                  linkType={link.linkType}
+                  url={link.url}
+                  label={link.label || link.customLabel}
+                />
+              ))
           ) : (
             <div className="text-center py-12 text-gray-500">
               <p>등록된 링크가 없습니다</p>
@@ -184,6 +188,88 @@ export default function Template3({ storeData }: TemplateProps) {
           )}
         </div>
       </div>
+
+      {/* Menu Section - Accordion Version (Active) */}
+      {foodsData.length > 0 && (
+        <div className="px-6 pb-6">
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="w-full h-10 px-4 py-4 bg-white hover:bg-gray-50 transition-colors flex items-center justify-between"
+            >
+              <h2 className="text-lg font-semibold text-gray-800">메뉴</h2>
+              <ChevronDown
+                className={`w-4 h-4 text-gray-600 transition-transform duration-300 ${
+                  isMenuOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            <div
+              className={`transition-all duration-300 ease-in-out ${
+                isMenuOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+              } overflow-hidden`}
+            >
+              <div className="px-4 py-4 bg-white border-t border-gray-100">
+                <div className="space-y-3">
+                  {foodsData.map((food) => (
+                    <div
+                      key={food.foodItemId}
+                      className="flex justify-between items-start border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
+                    >
+                      <div className="flex-1 min-w-0 pr-4">
+                        <p className="text-base font-medium text-gray-800">
+                          {food.foodName}
+                        </p>
+                        {food.description && (
+                          <p className="text-xs text-gray-500 mt-0.5 break-words">
+                            {food.description}
+                          </p>
+                        )}
+                      </div>
+                      <p className="text-[16px] font-medium text-[#7A8750] whitespace-nowrap flex-shrink-0">
+                        ₩ {food.price.toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Menu Section - List Version (Commented Out) */}
+      {/* {foodsData.length > 0 && (
+        <div className="px-6 pb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
+            메뉴
+          </h2>
+
+          <div className="space-y-3">
+            {foodsData.map((food) => (
+              <div
+                key={food.foodItemId}
+                className="flex justify-between items-start border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
+              >
+                <div className="flex-1 min-w-0 pr-4">
+                  <p className="text-base font-medium text-gray-800">
+                    {food.foodName}
+                  </p>
+                  {food.description && (
+                    <p className="text-xs text-gray-500 mt-0.5 break-words">
+                      {food.description}
+                    </p>
+                  )}
+                </div>
+                <p className="text-[16px] font-medium text-[#7A8750] whitespace-nowrap flex-shrink-0">
+                  ₩ {food.price.toLocaleString()}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )} */}
 
       {/* QR Code Modal */}
       {showQrModal && (

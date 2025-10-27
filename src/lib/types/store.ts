@@ -40,6 +40,7 @@ export interface LinkItem {
   url: string;
   customLabel?: string;  // CUSTOM 타입일 때 사용
   label?: string;        // 백엔드 응답에만 포함됨
+  isVisible?: boolean;   // 링크 표시 여부
 }
 
 // 매장 정보

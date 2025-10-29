@@ -105,11 +105,11 @@ export function LinkButton({
       <Image
         src={platformIcons[linkType]}
         alt={displayLabel}
-        width={24}
-        height={24}
-        className="flex-shrink-0"
+        width={32}
+        height={32}
+        className="flex-shrink-0 w-8 h-8 rounded-lg"
       />
-      <span className="font-medium text-base">{displayLabel}</span>
+      <span className="font-medium text-sub-body-sb">{displayLabel}</span>
     </button>
   );
 }

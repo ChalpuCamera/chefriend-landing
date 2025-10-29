@@ -32,12 +32,18 @@ const defaultLabels: Record<LinkType, string> = {
 interface LinkButtonProps {
   linkType: LinkType;
   url: string;
-  label?: string;  // 백엔드에서 받은 label 또는 customLabel
+  label?: string; // 백엔드에서 받은 label 또는 customLabel
   onClick?: () => void;
   className?: string;
 }
 
-export function LinkButton({ linkType, url, label, onClick, className = "" }: LinkButtonProps) {
+export function LinkButton({
+  linkType,
+  url,
+  label,
+  onClick,
+  className = "",
+}: LinkButtonProps) {
   // Instagram의 경우 URL에서 아이디 추출
   const getInstagramUsername = (instagramUrl: string): string => {
     if (!instagramUrl) return "인스타그램";
@@ -68,15 +74,26 @@ export function LinkButton({ linkType, url, label, onClick, className = "" }: Li
     return instagramUrl.startsWith("@") ? instagramUrl : `@${instagramUrl}`;
   };
 
-  const displayLabel = linkType === "INSTAGRAM"
-    ? (label || getInstagramUsername(url))
-    : (label || defaultLabels[linkType]);
+  const displayLabel =
+    linkType === "INSTAGRAM"
+      ? label || getInstagramUsername(url)
+      : label || defaultLabels[linkType];
 
   const handleClick = () => {
     if (onClick) {
       onClick();
     } else if (url) {
-      window.open(url.startsWith("http") ? url : `https://${url}`, "_blank");
+      let fullUrl;
+
+      if (url.startsWith("http")) {
+        fullUrl = url;
+      } else if (linkType === "INSTAGRAM") {
+        fullUrl = `https://instagram.com/${url}`;
+      } else {
+        fullUrl = `https://${url}`;
+      }
+
+      window.open(fullUrl, "_blank");
     }
   };
 

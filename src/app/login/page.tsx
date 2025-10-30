@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { trackKakaoLoginClick } from "@/lib/analytics";
+import { trackKakaoLoginClick, trackLandingBackButtonClick } from "@/lib/analytics";
 import { logButtonClick } from "@/lib/api/tracking";
 
 export default function LoginPage() {
@@ -30,13 +30,17 @@ export default function LoginPage() {
 
   const handleKakaoLogin = () => {
     // GA4 이벤트 추적 (기존)
-    trackKakaoLoginClick('login_page');
-
+    trackKakaoLoginClick('kakao_login_button_click');
     // 백엔드 버튼 로그 추적 (신규)
     logButtonClick('KAKAO_LOGIN');
 
     // 백엔드 OAuth URL로 리디렉션하여 카카오 로그인 시작
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth2/authorization/kakao/owner`;
+  };
+
+  const handleBackButtonClick = () => {
+    trackLandingBackButtonClick('landing_back_button_click');
+    router.back();
   };
 
   return (
@@ -45,7 +49,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[16px] pb-[40px] px-6">
         {/* Back Button - 절대 위치 */}
         <button
-          onClick={() => router.back()}
+          onClick={handleBackButtonClick}
           className="absolute left-6 top-[16px] w-8 h-8 flex items-center justify-center rounded-2xl hover:bg-gray-100 transition-colors z-10"
           aria-label="뒤로가기"
         >

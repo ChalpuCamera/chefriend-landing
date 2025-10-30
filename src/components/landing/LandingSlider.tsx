@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { trackCtaClick, trackLandingLoginLinkClick } from "@/lib/analytics";
+import { trackLandingCtaClick, trackLandingLoginLinkClick } from "@/lib/analytics";
 import { logButtonClick } from "@/lib/api/tracking";
 
 export default function LandingSlider() {
@@ -305,9 +305,7 @@ export default function LandingSlider() {
           <Link
             href="/login"
             onClick={() => {
-              // GA4 추적 (기존)
-              trackCtaClick(currentSlide + 1, slides[currentSlide].buttonText);
-              // 백엔드 버튼 로그 추적 (신규)
+              trackLandingCtaClick('landing_cta_click');
               logButtonClick('START_FREE');
             }}
             className="w-full bg-[#7c3bc6] hover:bg-[#6b32ad] text-white font-bold text-[17px] leading-[26px] py-[10px] rounded-xl transition-colors mb-3 block text-center"
@@ -320,9 +318,7 @@ export default function LandingSlider() {
             <Link
               href="/login"
               onClick={() => {
-                // GA4 추적 (기존)
-                trackLandingLoginLinkClick('landing_page_bottom');
-                // 백엔드 버튼 로그 추적 (신규)
+                trackLandingLoginLinkClick('landing_login_link_click');
                 logButtonClick('LOGIN');
               }}
               className="text-[#171a1f] font-bold text-[16px] leading-[24px] hover:text-[#565d6d] transition-colors inline-block"

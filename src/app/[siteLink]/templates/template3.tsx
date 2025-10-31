@@ -3,12 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { LinkButton } from "@/components/link-button";
+import { NoticeSection } from "@/components/notice-section";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
 import { Card, CardHeader } from "@/components/landing/ui/card";
 
-export default function Template3({ storeData, foodsData }: TemplateProps) {
+export default function Template3({
+  storeData,
+  foodsData,
+  noticesData,
+}: TemplateProps) {
   const links = storeData.links || [];
   const [copySuccess, setCopySuccess] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
@@ -112,7 +117,7 @@ export default function Template3({ storeData, foodsData }: TemplateProps) {
       <div className="px-6 pt-6 pb-4">
         {/* Store Icon & Tagline */}
         <div className="text-center mb-6">
-          <div className="flex justify-center mb-3">
+          <div className="mb-3">
             <div className="flex gap-4">
               <div className="w-8 h-8 bg-[#7790AC] rounded-lg flex items-center justify-center">
                 <IoRestaurantOutline className="w-5 h-5 text-white" />
@@ -123,17 +128,14 @@ export default function Template3({ storeData, foodsData }: TemplateProps) {
             </div>
           </div>
         </div>
-        <div className="text-center mb-6">
-          <p className="text-sub-body-r text-gray-500">공지사항</p>
-          {storeData.description && (
-            <Card className="p-4 mt-4">
-              <CardHeader>
-                <p className="text-sub-body-r text-gray-500">
-                  {storeData.description}
-                </p>
-              </CardHeader>
-            </Card>
+        {/* 공지사항 섹션 */}
+        <div className="mb-6">
+          {noticesData && noticesData.length > 0 && (
+            <h2 className="text-lg font-semibold text-gray-800 mb-3">
+              공지사항
+            </h2>
           )}
+          <NoticeSection notices={noticesData} />
         </div>
 
         {/* Share Button */}
@@ -170,9 +172,9 @@ export default function Template3({ storeData, foodsData }: TemplateProps) {
       {/* Links Section */}
       <div className="px-6 pb-6">
         <div className="flex flex-col gap-3">
-          {links.filter(link => link.isVisible !== false).length > 0 ? (
+          {links.filter((link) => link.isVisible !== false).length > 0 ? (
             links
-              .filter(link => link.isVisible !== false)
+              .filter((link) => link.isVisible !== false)
               .map((link, index) => (
                 <LinkButton
                   key={index}

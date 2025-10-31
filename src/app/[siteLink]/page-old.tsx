@@ -209,6 +209,7 @@ export default async function StorePage({ params }: StorePageProps) {
           }}
         />
         <TemplateComponent
+          noticesData={[]}
           storeId={storeId}
           storeData={storeData}
           foodsData={foodsData}

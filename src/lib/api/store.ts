@@ -6,6 +6,7 @@ import type {
   StoreResponse,
   FoodItemResponse,
   StoreIdResponse,
+  StoreNoticeResponse,
 } from "@/lib/types/store";
 
 // Use server-only API_URL or fallback to NEXT_PUBLIC for compatibility
@@ -103,4 +104,12 @@ export async function fetchFoodsByStore(
   pageable?: Pageable
 ): Promise<ApiResponse<PageResponse<FoodItemResponse>>> {
   return serverFetch(`/api/foods/store/${storeId}`, { params: pageable });
+}
+
+// Notice APIs
+export async function fetchNoticesByStore(
+  storeId: number,
+  pageable?: Pageable
+): Promise<ApiResponse<PageResponse<StoreNoticeResponse>>> {
+  return serverFetch(`/api/stores/${storeId}/notices`, { params: pageable });
 }

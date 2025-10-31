@@ -89,7 +89,7 @@ export default function RootLayout({
         />
         <GoogleAnalytics />
       </head>
-      <body className="font-pretendard antialiased">
+      <body className="antialiased">
         <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
       </body>
     </html>

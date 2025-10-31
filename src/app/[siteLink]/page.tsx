@@ -5,8 +5,9 @@ import {
   fetchStoreIdBySiteLink,
   fetchStore,
   fetchFoodsByStore,
+  fetchNoticesByStore,
 } from "@/lib/api/store";
-import type { FoodItemResponse } from "@/lib/types/store";
+import type { FoodItemResponse, StoreNoticeResponse } from "@/lib/types/store";
 
 interface StorePageProps {
   params: Promise<{ siteLink: string }>;
@@ -130,6 +131,18 @@ export default async function StorePage({ params }: StorePageProps) {
       // Silently handle foods fetch errors
     }
 
+    // 4. Notices 정보 fetch
+    let noticesData: StoreNoticeResponse[] = [];
+    try {
+      const noticesResponse = await fetchNoticesByStore(storeId, {
+        page: 0,
+        size: 20,
+      });
+      noticesData = noticesResponse?.result?.content || [];
+    } catch {
+      // Silently handle notices fetch errors
+    }
+
     // Restaurant Schema for JSON-LD
     const structuredData = {
       "@context": "https://schema.org",
@@ -183,6 +196,7 @@ export default async function StorePage({ params }: StorePageProps) {
           storeId={storeId}
           storeData={storeData}
           foodsData={foodsData}
+          noticesData={noticesData}
         />
       </>
     );

@@ -77,3 +77,13 @@ export interface StoreIdResponse {
   storeId: number;
   storeName?: string;
 }
+
+// 가게 공지사항
+export interface StoreNoticeResponse {
+  id: number;
+  storeId: number;
+  title: string;
+  body: string;
+  createdAt: string; // ISO date-time string
+  updatedAt: string; // ISO date-time string
+}

@@ -137,6 +137,7 @@ export default async function StorePage({ params }: StorePageProps) {
       const noticesResponse = await fetchNoticesByStore(storeId, {
         page: 0,
         size: 20,
+        sort: ["createdAt,desc"],
       });
       noticesData = noticesResponse?.result?.content || [];
     } catch {

@@ -7,7 +7,6 @@ import { NoticeSection } from "@/components/notice-section";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
-import { Card, CardHeader } from "@/components/landing/ui/card";
 
 export default function Template3({
   storeData,

@@ -100,16 +100,18 @@ export function LinkButton({
   return (
     <button
       onClick={handleClick}
-      className={`w-full flex items-center gap-3 px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:opacity-90 transition-opacity ${className}`}
+      className={`relative w-full flex items-center gap-3 px-4 py-3 bg-[#7790AC] text-white rounded-lg hover:opacity-90 transition-opacity ${className}`}
     >
       <Image
         src={platformIcons[linkType]}
         alt={displayLabel}
         width={32}
         height={32}
-        className="flex-shrink-0 w-8 h-8 rounded-lg"
+        className="relative z-10 flex-shrink-0 w-8 h-8 rounded-lg"
       />
-      <span className="font-medium text-sub-body-sb">{displayLabel}</span>
+      <span className="absolute inset-x-0 flex justify-center items-center h-full font-bold text-body-sb">
+        {displayLabel}
+      </span>
     </button>
   );
 }

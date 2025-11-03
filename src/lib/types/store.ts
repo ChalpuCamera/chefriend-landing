@@ -84,6 +84,7 @@ export interface StoreNoticeResponse {
   storeId: number;
   title: string;
   body: string;
+  isRepresentative: boolean;
   createdAt: string; // ISO date-time string
   updatedAt: string; // ISO date-time string
 }

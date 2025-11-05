@@ -68,6 +68,8 @@ export interface FoodItemResponse {
   isActive: boolean;
   thumbnailUrl?: string;
   categoryName?: string;
+  hasActiveReview?: boolean;
+  activeQuestionCount?: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -4,9 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { LinkButton } from "@/components/link-button";
 import { NoticeSection } from "@/components/notice-section";
-import { IoRestaurantOutline } from "react-icons/io5";
+import { IoChatboxEllipsesOutline, IoRestaurantOutline } from "react-icons/io5";
 import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
+import type { FoodItemResponse } from "@/lib/types/store";
 
 export default function Template3({
   storeData,
@@ -107,6 +108,15 @@ export default function Template3({
     } catch (err) {
       console.error("Failed to download QR code:", err);
       alert("QR 코드 다운로드에 실패했습니다.");
+    }
+  };
+
+  const handleFoodClick = (food: FoodItemResponse) => {
+    if (food.hasActiveReview) {
+      window.open(
+        `https://ceo.chefriend.kr/customer/review?storeId=${storeData.storeId}&foodId=${food.foodItemId}`,
+        "_blank"
+      );
     }
   };
 
@@ -219,9 +229,21 @@ export default function Template3({
                       className="flex justify-between items-start border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
                     >
                       <div className="flex-1 min-w-0 pr-4">
-                        <p className="text-base font-medium text-gray-800">
-                          {food.foodName}
-                        </p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-base font-medium text-gray-800">
+                            {food.foodName}
+                          </p>
+                          <div>
+                            {food.hasActiveReview && (
+                              <button
+                                onClick={() => handleFoodClick(food)}
+                                className="text-caption-r w-24 h-6 bg-[#7790AC] text-white rounded-lg"
+                              >
+                                리뷰 등록하기
+                              </button>
+                            )}
+                          </div>
+                        </div>
                         {food.description && (
                           <p className="text-xs text-gray-500 mt-0.5 break-words">
                             {food.description}

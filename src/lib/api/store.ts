@@ -113,3 +113,10 @@ export async function fetchNoticesByStore(
 ): Promise<ApiResponse<PageResponse<StoreNoticeResponse>>> {
   return serverFetch(`/api/stores/${storeId}/notices`, { params: pageable });
 }
+
+// Food Detail API
+export async function fetchFood(
+  foodId: number
+): Promise<ApiResponse<FoodItemResponse>> {
+  return serverFetch(`/api/foods/${foodId}`);
+}

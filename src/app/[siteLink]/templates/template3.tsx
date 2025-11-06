@@ -4,12 +4,13 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { LinkButton } from "@/components/link-button";
 import { NoticeSection } from "@/components/notice-section";
-import { IoChatboxEllipsesOutline, IoRestaurantOutline } from "react-icons/io5";
+import { IoRestaurantOutline } from "react-icons/io5";
 import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
 import type { FoodItemResponse } from "@/lib/types/store";
 
 export default function Template3({
+  siteLink,
   storeData,
   foodsData,
   noticesData,
@@ -111,13 +112,18 @@ export default function Template3({
     }
   };
 
-  const handleFoodClick = (food: FoodItemResponse) => {
+  const handleFoodClick = (food: FoodItemResponse, e: React.MouseEvent) => {
+    e.stopPropagation(); // 메뉴 클릭 이벤트 전파 방지
     if (food.hasActiveReview) {
-      window.open(
-        `https://ceo.chefriend.kr/customer/review?storeId=${storeData.storeId}&foodId=${food.foodItemId}`,
-        "_blank"
+      window.location.href = (
+        `https://ceo.chefriend.kr/customer/review?storeId=${storeData.storeId}&foodId=${food.foodItemId}`
       );
     }
+  };
+
+  // 메뉴 상세 페이지로 이동
+  const handleMenuClick = (foodItemId: number) => {
+    window.location.href = `/${siteLink}/${foodItemId}`;
   };
 
   return (
@@ -181,7 +187,7 @@ export default function Template3({
       {/* Links Section */}
       <div className="px-6 pb-6">
         <div className="flex flex-col gap-3">
-          {links.filter((link) => link.isVisible !== false).length > 0 ? (
+          {links.filter((link) => link.isVisible !== false).length > 0 &&
             links
               .filter((link) => link.isVisible !== false)
               .map((link, index) => (
@@ -191,12 +197,7 @@ export default function Template3({
                   url={link.url}
                   label={link.label || link.customLabel}
                 />
-              ))
-          ) : (
-            <div className="text-center py-12 text-gray-500">
-              <p>등록된 링크가 없습니다</p>
-            </div>
-          )}
+              ))}
         </div>
       </div>
 
@@ -226,33 +227,56 @@ export default function Template3({
                   {foodsData.map((food) => (
                     <div
                       key={food.foodItemId}
-                      className="flex justify-between items-start border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
+                      className="flex flex-col gap-2 border-b border-gray-100 last:border-b-0 min-h-[80px]"
                     >
-                      <div className="flex-1 min-w-0 pr-4">
-                        <div className="flex items-center justify-between">
-                          <p className="text-base font-medium text-gray-800">
-                            {food.foodName}
-                          </p>
-                          <div>
-                            {food.hasActiveReview && (
-                              <button
-                                onClick={() => handleFoodClick(food)}
-                                className="text-caption-r w-24 h-6 bg-[#7790AC] text-white rounded-lg"
-                              >
-                                리뷰 등록하기
-                              </button>
-                            )}
-                          </div>
-                        </div>
+                      {/* First Row - Menu Name, Price, Detail Button */}
+                      <div className="flex items-center gap-3">
+                        {/* Menu Name */}
+                        <p className="flex-1 text-base font-medium text-gray-800 truncate">
+                          {food.foodName}
+                        </p>
+
+                        {/* Price */}
+                        <p className="flex-shrink-0 text-[16px] font-medium text-[#7A8750] whitespace-nowrap">
+                          ₩ {food.price.toLocaleString()}
+                        </p>
+
+                        {/* 상세보기 button */}
+                        <button
+                          onClick={() => handleMenuClick(food.foodItemId)}
+                          className="w-24 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors whitespace-nowrap flex-shrink-0"
+                        >
+                          상세보기
+                        </button>
+                      </div>
+
+                      {/* Second Row - Description and Review Button */}
+                      <div className="flex items-center gap-3">
+                        {/* Description */}
                         {food.description && (
-                          <p className="text-xs text-gray-500 mt-0.5 break-words">
+                          <p className="flex-1 text-xs text-gray-500 truncate">
                             {food.description}
                           </p>
                         )}
+
+                        {/* Empty space for alignment */}
+                        {!food.description && <div className="flex-1"></div>}
+
+                        {/* Empty space to align with price */}
+                        <div className="flex-shrink-0 w-[80px]"></div>
+
+                        {/* 리뷰 등록하기 button - conditional */}
+                        {food.hasActiveReview ? (
+                          <button
+                            onClick={(e) => handleFoodClick(food, e)}
+                            className="w-24 px-3 py-1.5 text-xs font-medium text-white bg-[#7790AC] rounded-md hover:bg-[#6a7d99] transition-colors whitespace-nowrap flex-shrink-0"
+                          >
+                            리뷰 등록하기
+                          </button>
+                        ) : (
+                          <div className="w-24 flex-shrink-0"></div>
+                        )}
                       </div>
-                      <p className="text-[16px] font-medium text-[#7A8750] whitespace-nowrap flex-shrink-0">
-                        ₩ {food.price.toLocaleString()}
-                      </p>
                     </div>
                   ))}
                 </div>

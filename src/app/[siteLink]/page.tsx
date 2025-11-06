@@ -124,7 +124,7 @@ export default async function StorePage({ params }: StorePageProps) {
     try {
       const foodsResponse = await fetchFoodsByStore(storeId, {
         page: 0,
-        size: 20,
+        size: 100,
       });
       foodsData = foodsResponse?.result?.content || [];
     } catch {
@@ -195,6 +195,7 @@ export default async function StorePage({ params }: StorePageProps) {
         />
         <Template3
           storeId={storeId}
+          siteLink={siteLink}
           storeData={storeData}
           foodsData={foodsData}
           noticesData={noticesData}

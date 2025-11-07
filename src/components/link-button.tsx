@@ -107,7 +107,7 @@ export function LinkButton({
         alt={displayLabel}
         width={32}
         height={32}
-        className="relative z-10 flex-shrink-0 w-8 h-8 rounded-lg"
+        className="relative flex-shrink-0 w-8 h-8 rounded-lg"
       />
       <span className="absolute inset-x-0 flex justify-center items-center h-full font-bold text-body-sb">
         {displayLabel}

@@ -133,7 +133,7 @@ export default function Template3({
         {/* Store Icon & Tagline */}
         <div className="text-center mb-6">
           <div className="mb-3">
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <div className="w-8 h-8 bg-[#7790AC] rounded-lg flex items-center justify-center">
                 <IoRestaurantOutline className="w-5 h-5 text-white" />
               </div>

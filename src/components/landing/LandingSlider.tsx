@@ -21,22 +21,29 @@ export default function LandingSlider() {
     {
       id: 1,
       image: "/landing1.png",
-      title: "나만의 미니홈피를 만드세요",
-      description: "인스타·카톡·배달앱 링크를 한 곳에",
+      title: "인스타에 어떤 링크 올릴 지 고민하지 마세요!",
+      description: "배달·지도·문의 링크를 한 페이지에 모아 한 링크로 보여줍니다",
       buttonText: "무료로 시작하기",
     },
     {
       id: 2,
       image: "/landing2.png",
-      title: "모든 홍보 링크를 한 곳에서",
-      description: "메뉴·영업시간·오시는 길까지, 클릭 한 번으로 안내해요",
+      title: "배민을 올릴지 쿠팡이츠를 올릴지 매번 고민되시죠",
+      description: "둘 다 넣어두면 손님이 자기한테 맞는 앱을 선택해 들어갑니다",
       buttonText: "지금 만들어보기",
     },
     {
       id: 3,
       image: "/landing3.png",
-      title: "동네맛집의 작은 홈페이지",
-      description: "내 가게의 모든 홍보를 한 페이지에 담으세요",
+      title: "손님이 “맛있다”만 쓰고 가서 어디를 고쳐야 할지 모르시죠?",
+      description: "메뉴별로 맛·양·가격 으로 리뷰를 나눠 받아 바로 개선 포인트를 볼 수 있습니다",
+      buttonText: "무료로 제작하기",
+    },
+    {
+      id: 4,
+      image: "/landing2.png",
+      title: "메뉴는 새로 냈는데 ‘맛이 어떤지’ 말해줄 손님이 안 모이죠?",
+      description: "새 메뉴에 리워드를 걸어 고객이 한 번은 먹어보게 만듭니다",
       buttonText: "무료로 제작하기",
     },
   ];
@@ -276,10 +283,10 @@ export default function LandingSlider() {
         <div className="flex-1 flex flex-col">
           {/* Title and Description */}
           <div className="text-left mb-3">
-            <h2 className="text-[22px] font-bold text-[#171a1f] leading-[32px] mb-1">
+            <h2 className="text-[20px] font-bold text-[#171a1f] leading-[32px] mb-1">
               {slides[currentSlide].title}
             </h2>
-            <p className="text-[13px] text-[#9095a0] leading-[22px]">
+            <p className="text-[10px] text-[#9095a0] leading-[22px]">
               {slides[currentSlide].description}
             </p>
           </div>

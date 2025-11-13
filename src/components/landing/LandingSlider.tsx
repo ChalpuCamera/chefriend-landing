@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { trackLandingCtaClick, trackLandingLoginLinkClick } from "@/lib/analytics";
+import {
+  trackLandingCtaClick,
+  trackLandingLoginLinkClick,
+} from "@/lib/analytics";
 import { logButtonClick } from "@/lib/api/tracking";
 
 export default function LandingSlider() {
@@ -22,7 +25,8 @@ export default function LandingSlider() {
       id: 1,
       image: "/landing1.png",
       title: "인스타에 어떤 링크 올릴 지 고민하지 마세요!",
-      description: "배달·지도·문의 링크를 한 페이지에 모아 한 링크로 보여줍니다",
+      description:
+        "배달·지도·문의 링크를 한 페이지에 모아 한 링크로 보여줍니다",
       buttonText: "무료로 시작하기",
     },
     {
@@ -36,7 +40,8 @@ export default function LandingSlider() {
       id: 3,
       image: "/landing3.png",
       title: "손님이 “맛있다”만 쓰고 가서 어디를 고쳐야 할지 모르시죠?",
-      description: "메뉴별로 맛·양·가격 으로 리뷰를 나눠 받아 바로 개선 포인트를 볼 수 있습니다",
+      description:
+        "메뉴별로 맛·양·가격 으로 리뷰를 나눠 받아 바로 개선 포인트를 볼 수 있습니다",
       buttonText: "무료로 제작하기",
     },
     {
@@ -142,20 +147,20 @@ export default function LandingSlider() {
   // Prevent body scroll on landing page
   useEffect(() => {
     // body와 html에 overflow hidden 적용
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
     // iOS Safari에서 bounce 효과 방지
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.height = '100%';
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.height = "100%";
 
     return () => {
       // 컴포넌트 언마운트 시 원래대로 복구
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.height = '';
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
     };
   }, []);
 
@@ -184,8 +189,8 @@ export default function LandingSlider() {
     <div className="relative w-full h-screen bg-white flex flex-col overflow-hidden">
       {/* Container - 430px 고정 폭 */}
       <div className="w-full max-w-[430px] h-full mx-auto flex flex-col relative pt-[16px] pb-[40px] px-6">
-        {/* Logo Section - 상단 중앙 */}
-        <div className="flex items-center justify-center gap-2 mb-3">
+        <div className="flex items-center justify-between mb-3">
+          {/* Logo Section - 왼쪽 */}
           <div className="w-[170px] h-[38px] relative flex-shrink-0">
             <Image
               src="/logo_big.png"
@@ -194,6 +199,18 @@ export default function LandingSlider() {
               className="object-contain"
             />
           </div>
+          {/* Login Link - 오른쪽 */}
+          <Link
+            href="/login"
+            onClick={() => {
+              trackLandingLoginLinkClick("landing_login_link_click");
+              logButtonClick("LOGIN");
+            }}
+            aria-label="로그인 페이지로 이동"
+            className="text-[#171a1f] font-bold text-[16px] leading-[24px] hover:text-[#565d6d] transition-colors p-2 -m-2"
+          >
+            로그인
+          </Link>
         </div>
 
         {/* iPhone Mockup Section - 중앙 (드래그 기능 비활성화) */}
@@ -283,10 +300,10 @@ export default function LandingSlider() {
         <div className="flex-1 flex flex-col">
           {/* Title and Description */}
           <div className="text-left mb-3">
-            <h2 className="text-[20px] font-bold text-[#171a1f] leading-[32px] mb-1">
+            <h2 className="text-[21px] font-bold text-[#171a1f] leading-[32px] mb-1">
               {slides[currentSlide].title}
             </h2>
-            <p className="text-[10px] text-[#9095a0] leading-[22px]">
+            <p className="text-[16px] text-[#9095a0] leading-[22px]">
               {slides[currentSlide].description}
             </p>
           </div>
@@ -303,7 +320,6 @@ export default function LandingSlider() {
                 onChange={(e) => setCustomUrl(e.target.value)}
                 placeholder=""
                 className="w-full px-1 py-0 outline-none text-[16px] text-[#565d6d] bg-white border-0 leading-[20px]"
-                style={{ fontFamily: "'Nunito', sans-serif" }}
               />
             </div>
           </div>
@@ -312,28 +328,13 @@ export default function LandingSlider() {
           <Link
             href="/login"
             onClick={() => {
-              trackLandingCtaClick('landing_cta_click');
-              logButtonClick('START_FREE');
+              trackLandingCtaClick("landing_cta_click");
+              logButtonClick("START_FREE");
             }}
             className="w-full bg-[#7c3bc6] hover:bg-[#6b32ad] text-white font-bold text-[17px] leading-[26px] py-[10px] rounded-xl transition-colors mb-3 block text-center"
           >
             {slides[currentSlide].buttonText}
           </Link>
-
-          {/* Login Link */}
-          <div className="text-center">
-            <Link
-              href="/login"
-              onClick={() => {
-                trackLandingLoginLinkClick('landing_login_link_click');
-                logButtonClick('LOGIN');
-              }}
-              className="text-[#171a1f] font-bold text-[16px] leading-[24px] hover:text-[#565d6d] transition-colors inline-block"
-              style={{ fontFamily: "'Nunito', 'Noto Sans KR', sans-serif" }}
-            >
-              로그인
-            </Link>
-          </div>
         </div>
       </div>
     </div>

@@ -57,14 +57,16 @@ export function MenuClient({ menuData, storeId }: MenuClientProps) {
       {/* Main Content */}
       <div className="pt-30">
         {/* Main Image */}
-        <div className="w-full h-[220px] mb-6">
-          <Image
-            src={imageUrl}
-            alt={menuName}
-            width={375}
-            height={220}
-            className="w-full h-full object-cover"
-          />
+        <div className="px-4 mb-6">
+          <div className="w-full h-[224px] rounded-xl flex items-center justify-center overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={menuName}
+              width={398}
+              height={224}
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
         {/* Description */}
         {menuData.description && (

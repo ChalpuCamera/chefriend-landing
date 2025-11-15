@@ -254,7 +254,7 @@ export default function Template3({
                       <div className="flex items-center gap-3">
                         {/* Description */}
                         {food.description && (
-                          <p className="flex-1 text-xs text-gray-500 truncate">
+                          <p className="flex-1 text-sub-body-sb text-gray-500 truncate">
                             {food.description}
                           </p>
                         )}

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import { LinkButton } from "@/components/link-button";
 import { NoticeSection } from "@/components/notice-section";
+import { CouponPhoneSheet } from "@/components/coupon/CouponPhoneSheet";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { ChevronDown } from "lucide-react";
 import type { TemplateProps } from "./types";
@@ -19,6 +20,7 @@ export default function Template3({
   const [copySuccess, setCopySuccess] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
+  const [showCouponSheet, setShowCouponSheet] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   const shareMenuRef = useRef<HTMLDivElement>(null);
@@ -112,6 +114,10 @@ export default function Template3({
     }
   };
 
+  const handleCouponClick = () => {
+    setShowCouponSheet(true);
+  };
+
   const handleFoodClick = (food: FoodItemResponse, e: React.MouseEvent) => {
     e.stopPropagation(); // 메뉴 클릭 이벤트 전파 방지
     if (food.hasActiveReview) {
@@ -181,6 +187,16 @@ export default function Template3({
               </div>
             )}
           </div>
+        </div>
+
+        {/* Coupon Button */}
+        <div className="mb-6">
+          <button
+            onClick={handleCouponClick}
+            className="w-full px-4 py-2.5 bg-white border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-all text-sm font-medium"
+          >
+            쿠폰 적립/사용
+          </button>
         </div>
       </div>
 
@@ -375,6 +391,14 @@ export default function Template3({
           </div>
         </div>
       )}
+
+      {/* Coupon Phone Sheet */}
+      <CouponPhoneSheet
+        open={showCouponSheet}
+        onClose={() => setShowCouponSheet(false)}
+        siteLink={siteLink}
+        storeId={storeData.storeId}
+      />
     </div>
   );
 }

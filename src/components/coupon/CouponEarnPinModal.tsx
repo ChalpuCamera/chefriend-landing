@@ -124,7 +124,7 @@ export function CouponEarnPinModal({ open, onClose, pin, expiredAt, storeId, pho
           <h2 className="text-sub-title-b text-gray-900 mb-6">적립 PIN 번호</h2>
 
           {/* PIN Display */}
-          <div className="bg-gradient-to-br from-chefriend to-chefriend/80 rounded-2xl p-8 mb-6">
+          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-8 mb-6">
             <p className="text-6xl font-bold text-white tracking-wider mb-2">{pin}</p>
             <div className="h-px bg-white/30 mb-4" />
             <p className="text-body-r text-white/90">이 번호를 사장님께 알려주세요</p>

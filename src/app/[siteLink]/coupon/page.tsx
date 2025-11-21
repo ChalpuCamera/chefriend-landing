@@ -122,7 +122,7 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
           <p className="text-body-r text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => router.push(`/${siteLink}`)}
-            className="px-6 py-3 bg-chefriend text-white rounded-3xl hover:bg-chefriend/90 transition-all"
+            className="px-6 py-3 bg-purple-500 text-white rounded-3xl hover:bg-purple-500/90 transition-all"
           >
             돌아가기
           </button>
@@ -166,7 +166,7 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
       <div className="mt-8 space-y-3">
         <button
           onClick={handleEarn}
-          className="w-full px-6 py-4 bg-white border-2 border-chefriend text-chefriend rounded-3xl hover:bg-chefriend hover:text-white transition-all text-headline-b shadow-sm"
+          className="w-full px-6 py-4 bg-white border-2 border-chefriend text-chefriend rounded-3xl hover:bg-purple-500 hover:text-white transition-all text-headline-b shadow-sm"
         >
           적립하기
         </button>
@@ -175,7 +175,7 @@ export default function CouponPage({ params }: { params: Promise<{ siteLink: str
           disabled={!membership?.canRedeem}
           className={`w-full px-6 py-4 rounded-3xl text-headline-b transition-all shadow-sm ${
             membership?.canRedeem
-              ? "bg-chefriend text-white hover:bg-chefriend/90"
+              ? "bg-purple-500 text-white hover:bg-purple-500/90"
               : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
         >

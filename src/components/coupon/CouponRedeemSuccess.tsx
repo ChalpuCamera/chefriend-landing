@@ -25,7 +25,7 @@ export function CouponRedeemSuccess() {
     <div className="bg-white w-full mx-auto min-h-screen max-w-[430px] flex flex-col items-center justify-center p-6">
       {/* Success Icon */}
       <div className="mb-8">
-        <div className="w-32 h-32 bg-chefriend rounded-full flex items-center justify-center shadow-lg">
+        <div className="w-32 h-32 bg-purple-500 rounded-full flex items-center justify-center shadow-lg">
           <svg className="w-20 h-20 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"

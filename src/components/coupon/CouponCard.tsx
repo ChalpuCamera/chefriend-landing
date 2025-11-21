@@ -17,8 +17,8 @@ export function CouponCard({ currentStamps, totalStamps = 10 }: CouponCardProps)
       {/* Title */}
       <div className="text-center mb-6">
         <h2 className="text-sub-title-b text-gray-900 mb-1">스탬프 카드</h2>
-        <p className="text-body-r text-gray-600">
-          {currentStamps} / {totalStamps}
+        <p className="text-title-1 text-gray-600">
+          {currentStamps} / 10
         </p>
       </div>
 
@@ -30,7 +30,7 @@ export function CouponCard({ currentStamps, totalStamps = 10 }: CouponCardProps)
             className="aspect-square rounded-2xl bg-gray-50 flex items-center justify-center transition-all duration-300"
           >
             {filled ? (
-              <div className="w-10 h-10 rounded-full bg-chefriend flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="currentColor"
@@ -49,23 +49,6 @@ export function CouponCard({ currentStamps, totalStamps = 10 }: CouponCardProps)
           </div>
         ))}
       </div>
-
-      {/* Progress Bar */}
-      <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
-        <div
-          className="bg-chefriend h-full transition-all duration-500 ease-out"
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
-
-      {/* Complete Message */}
-      {currentStamps >= totalStamps && (
-        <div className="mt-4 text-center">
-          <p className="text-headline-b text-chefriend">
-            🎉 쿠폰 사용 가능!
-          </p>
-        </div>
-      )}
     </div>
   )
 }
